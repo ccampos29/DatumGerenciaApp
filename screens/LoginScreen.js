@@ -17,7 +17,7 @@ export default function LoginScreen(){
 
                 <View style={{marginTop:25, alignItems: 'center'}}>
                     <TextInput
-                        label="Nombre de usuario"
+                        label="Nombre de usuari"
                         leftIcon="user"
                         leftIconType="awesome"
                         containerMaxWidth='88%'

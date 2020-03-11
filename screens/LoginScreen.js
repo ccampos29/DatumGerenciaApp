@@ -2,8 +2,13 @@ import * as React from 'react'
 import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground } from 'react-native'
 import TextInput from 'react-native-textinput-with-icons'
 import { CheckBox } from 'react-native-elements'
+import { createStackNavigator } from '@react-navigation/stack';
 
-export default function LoginScreen(){
+import HomeScreen from './HomeScreen';
+
+const Stack = createStackNavigator();
+
+export default function LoginScreen({ navigation }){
 
     return (
         <ImageBackground source={require('./../assets/background.jpg')} style={{width: '100%', height: '100%'}}>
@@ -37,7 +42,9 @@ export default function LoginScreen(){
                         />
                     </View>
                     <View>
-                        <TouchableOpacity style={{backgroundColor:"#fed501", borderRadius:6}}>
+                        <Stack.Screen name='Home' component={HomeScreen}/>
+                        <TouchableOpacity 
+                            style={{backgroundColor:"#fed501", borderRadius:6}}>
                             <Text style = {styles.text}>
                                 Ingresar
                             </Text>

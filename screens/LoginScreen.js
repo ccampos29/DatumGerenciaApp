@@ -1,7 +1,9 @@
-import * as React from 'react'
-import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground } from 'react-native'
+import * as React from 'react';
+import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground } from 'react-native';
 import TextInput from 'react-native-textinput-with-icons'
-import { CheckBox } from 'react-native-elements'
+
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 export default function LoginScreen(){
 
@@ -12,37 +14,29 @@ export default function LoginScreen(){
                     <Text style={ styles.TextHeader }>INICIAR SESIÓN</Text>
                 </View>
                 <View style={styles.ContainerForm}>
-                    <View style={{marginTop:'10%'}}>
-                        <TextInput
-                            label="Correo electronico"
-                            leftIcon="envelope"
-                            leftIconType="awesome"
-                            containerMaxWidth='88%'
-                            labelActiveColor='#fed501'
-                            underlineActiveColor='#fed501'
-                        />
-                        <TextInput
-                            label="Contraseña"
-                            leftIcon="lock"
-                            leftIconType="awesome"
-                            containerMaxWidth='88%'
-                            labelActiveColor='#fed501'
-                            underlineActiveColor='#fed501'
-                            secureTextEntry={true}
-                        />
-                        <CheckBox
-                            title='Conservar la sesión'
-                            containerStyle={{backgroundColor:'white', borderColor:'white', marginLeft:"-3%"}}
-                            textStyle={{fontWeight:'normal'}}
-                        />
-                    </View>
-                    <View>
-                        <TouchableOpacity style={{backgroundColor:"#fed501", borderRadius:6}}>
-                            <Text style = {styles.text}>
-                                Ingresar
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+
+                <View style={{marginTop:25, alignItems: 'center'}}>
+                    <TextInput
+                        label="Nombre de usuari"
+                        leftIcon="user"
+                        leftIconType="awesome"
+                        containerMaxWidth='88%'
+                    />
+                    <TextInput
+                        label="Email"
+                        leftIcon="envelope"
+                        leftIconType="awesome"
+                        containerMaxWidth='88%'
+                    />
+                </View>
+                
+                <View style={{marginTop:10}}>
+                    <TouchableOpacity>
+                        <Text style = {styles.text}>
+                        INICIAR
+                        </Text>
+                    </TouchableOpacity>
+                </View>
                 </View>
             </View>
         </ImageBackground>
@@ -64,7 +58,7 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         width: '80%', 
         height: '7%',
-        backgroundColor: "#fed501", 
+        backgroundColor: "#fed501",     
         borderRadius: 6,
         zIndex:1,
         shadowColor: "#000",
@@ -88,15 +82,14 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         backgroundColor: "#FFFFFF", 
         width: '90%', 
-        height: '36%',
+        height: '30%',
         borderRadius: 12,
         padding: 10
     },
     text: {
         padding: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        color: "#FFFFFF",
-        fontSize:16
+        color: "#fed501",
+        fontWeight: 'bold',
+        fontSize:18
      }
 });

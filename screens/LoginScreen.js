@@ -4,10 +4,6 @@ import TextInput from 'react-native-textinput-with-icons'
 import { CheckBox } from 'react-native-elements'
 import { createStackNavigator } from '@react-navigation/stack';
 
-import HomeScreen from './HomeScreen';
-
-const Stack = createStackNavigator();
-
 export default function LoginScreen({ navigation }){
 
     return (

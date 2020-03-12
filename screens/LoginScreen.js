@@ -1,8 +1,7 @@
-import * as React from 'react'
-import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground } from 'react-native'
+import * as React from 'react';
+import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground } from 'react-native';
 import TextInput from 'react-native-textinput-with-icons'
 import { CheckBox } from 'react-native-elements'
-import { createStackNavigator } from '@react-navigation/stack';
 
 export default function LoginScreen({ navigation }){
 
@@ -38,7 +37,6 @@ export default function LoginScreen({ navigation }){
                         />
                     </View>
                     <View>
-                        <Stack.Screen name='Home' component={HomeScreen}/>
                         <TouchableOpacity 
                             style={{backgroundColor:"#fed501", borderRadius:6}}>
                             <Text style = {styles.text}>
@@ -67,7 +65,7 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         width: '80%', 
         height: '7%',
-        backgroundColor: "#fed501", 
+        backgroundColor: "#fed501",     
         borderRadius: 6,
         zIndex:1,
         shadowColor: "#000",
@@ -91,15 +89,14 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         backgroundColor: "#FFFFFF", 
         width: '90%', 
-        height: '36%',
+        height: '30%',
         borderRadius: 12,
         padding: 10
     },
     text: {
         padding: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        color: "#FFFFFF",
-        fontSize:16
+        color: "#fed501",
+        fontWeight: 'bold',
+        fontSize:18
      }
 });

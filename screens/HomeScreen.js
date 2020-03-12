@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Icon } from 'react-native-elements'
+import { StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
 
@@ -49,15 +50,15 @@ export default function HomeScreen({ navigation }) {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Home"
+        name="Home" 
         component={Home}
         options={{
           title: 'Home',
           headerLeft: () => (
-            <TouchableOpacity
-              style={styles.MenuStyle}
+            <TouchableOpacity 
+              style= {styles.MenuStyle}
               onPress={() => navigation.toggleDrawer()}
-              hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}>
+              hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
               <Icon
                 name='bars'
                 type='font-awesome'
@@ -74,7 +75,8 @@ export default function HomeScreen({ navigation }) {
             fontWeight: 'bold',
           },
           headerTitleAlign: 'center'
-        }} />
+        }}
+      />   
     </Stack.Navigator>
   );
 }

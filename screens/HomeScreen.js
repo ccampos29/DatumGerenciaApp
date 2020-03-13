@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, ImageBackground,Alert } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,10 +8,10 @@ import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
 
 function Home() {
   const data = [
-    { key: 1, label: 'CHECKLIST', crear: 'CREAR', ver: 'VER' },
-    { key: 2, label: 'COMBUSTIBLES', crear: 'CREAR', ver: 'VER' },
-    { key: 3, label: 'OTROS GASTOS', crear: 'CREAR', ver: 'VER' },
-    { key: 4, label: 'NOVEDADES', crear: 'CREAR', ver: 'VER' },
+    { key: 1, label: 'CHECKLIST', crear: 'CREAR', ver: 'VER', image: require('./../assets/checklist.png') },
+    { key: 2, label: 'COMBUSTIBLES', crear: 'CREAR', ver: 'VER', image: require('./../assets/combustible.png') },
+    { key: 3, label: 'OTROS GASTOS', crear: 'CREAR', ver: 'VER', image: require('./../assets/otrosGastos.png') },
+    { key: 4, label: 'NOVEDADES', crear: 'CREAR', ver: 'VER', image: require('./../assets/novedades.png') },
   ];
 
   return (
@@ -19,24 +19,25 @@ function Home() {
       <SwipeableFlatList
         data={data}
         renderItem={({ item }) => (
-          <Text style={{ marginTop:30, marginLeft:30,height: 48 }}>{item.label}</Text>
+          <ImageBackground source={item.image} style={styles.elementList}>
+            <Text style={styles.textList}>{item.label}</Text>
+          </ImageBackground>
         )}
+        
         // renderLeft={({ item }) => (
         //     <Text style={{ width: 40 }}>{item.leftLabel}</Text>
         // )}
         renderRight={({ item }) => (
-          //<Text style={{ width: 100}}>{item.rightLabel}</Text>
-          <TouchableOpacity style={{marginTop:30, width: 80 }}>
-            <Text>
+          <TouchableOpacity style={{marginTop:10, width: 90 }}>
+            <Text style={styles.textCreate}>
               {item.crear}
             </Text>
+            <Text style={styles.textView}>
+              {item.ver}
+            </Text>
           </TouchableOpacity>
-          // <TouchableOpacity style={{ marginLeft:10}}>
-          //   <Text>
-          //     {item.ver}
-          //   </Text>
-          // </TouchableOpacity>
         )}
+        
         backgroundColor={'white'}
       />
     </View>
@@ -88,18 +89,44 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
+    paddingTop: 40,
+    paddingRight: 20,
   },
   backTextWhite: {
     color: '#FFF',
   },
 
-  rowFront: {
-    alignItems: 'center',
-    backgroundColor: '#CCC',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    justifyContent: 'center',
-    height: 50,
+  elementList:{
+
+    paddingTop:58, 
+    paddingLeft:70,
+    marginTop:10,
+    marginLeft:20, 
+    height: 150 
   },
+  textList: {
+
+    fontSize: 20,
+    color:'black',
+    fontWeight: 'bold', 
+    textAlign:'center'
+
+  },
+  textCreate:{
+    backgroundColor:'#A5FF8B',
+    padding:10,
+    paddingTop:25,
+    paddingBottom:25,
+    textAlign:'center'
+
+  },
+  textView:{
+    backgroundColor:'#8BFFEA',
+    padding:10,
+    paddingTop:25,
+    paddingBottom:25,
+    textAlign:'center'
+
+  }
 
 });

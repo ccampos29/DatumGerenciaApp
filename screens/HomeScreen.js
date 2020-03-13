@@ -3,23 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Platform} from 'react-native'
 import { Icon } from 'react-native-elements'
 import { createStackNavigator } from '@react-navigation/stack';
 
-const data = [
-  {id:1, text: "CHECKLIST"},
-  {id:2, text: "COMBUSTIBLE"},
-  {id:3, text: "OTROS GASTOS"},
-  {id:4, text: "NOVEDADES"},
-]
-
 function Home(){
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <FlatList
-        data={data}
-        keyExtractor={(item) => (item.item)}
-        ItemSeparatorComponent={() => <View style={styles.ItemSeparator}></View>}
-        contentContainerStyle ={{borderBottomColor: 'grey', borderBottonWidth:1 }}
-        renderItem={({item, index}) => <listItem item={item} index={index}/>}
-      />
+      
     </View>
   );  
 }

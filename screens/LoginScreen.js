@@ -40,7 +40,8 @@ export default function LoginScreen({ navigation }){
                         />
                         <View style={{alignItems: 'center'}}>
                             <TouchableOpacity 
-                                style={{backgroundColor:"#fed501", borderRadius:6, width: 100}}>
+                                style={{backgroundColor:"#fed501", borderRadius:6, width: 100}}
+                                onPress={()=>navigation.navigate('DrawerNavigation')} >
                                 <Text style = {styles.textButton}>
                                     Ingresar
                                 </Text>

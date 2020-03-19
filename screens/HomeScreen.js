@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     paddingLeft:70,
     marginTop:10,
     marginLeft:20, 
-    height: 150 
+    height: 170 
   },
   textList: {
 

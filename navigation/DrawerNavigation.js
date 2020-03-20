@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, CommonActions } from "@react-navigation/native";
 import {
   createDrawerNavigator,
   DrawerItemList
@@ -48,7 +48,17 @@ function Menu(props) {
       <DrawerMenu
         iconName="home"
         titleName="Home"
-        navigation={() => props.navigation.navigate("Home")}
+        navigation={() => props.navigation.dispatch(
+                            CommonActions.reset({
+                              index: 1,
+                              routes: [
+                                { name: 'Login' },
+                                { name: 'Home' },
+                                { name: 'About' }
+                              ],
+                            })
+                          )}
+        // navigation={() => props.navigation.navigate("Home")}
       />
       <DrawerMenu
         iconName="info-circle"
@@ -70,7 +80,7 @@ function MyDrawer() {
   return (
     <NavigationContainer ref={navigationRef}>
       <Drawer.Navigator drawerContent={props => <Menu {...props} />}>
-        <Drawer.Screen name="Login" component={LoginScreen} />
+        <Drawer.Screen name="Login" component={LoginScreen} options={{ gestureEnabled: false }} />
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="About" component={AboutScreen} />
       </Drawer.Navigator>

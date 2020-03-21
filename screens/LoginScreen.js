@@ -10,10 +10,37 @@ import {
 } from "react-native";
 import TextInput from "react-native-textinput-with-icons";
 import { CheckBox } from "react-native-elements";
+import { url } from "../src/constants/Urls"
 import Card from "./UI/Card";
-import * as RootNavigation from './RootNavigation'
+import * as RootNavigation from './RootNavigation';
+import api from "../src/Services/Api"
+
 
 export default function LoginScreen({ navigation }) {
+  const [email, setEmail] = React.useState();
+  const [password, setPassword] = React.useState();
+
+  var validation = async () => {
+    alert(email + " "+ password);
+    await fetch('https://www.hardeepcoder.site/api/login', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "email": email, "password": password })
+    }).then(res => res.json())
+      .then(resData => {
+        alert(resData.message);
+        // Aca se almacena la sesión con el token en el AsyncStorage 
+        // Con los metodos getItem('authentication_data'); y setItem('authentication_data');
+        // Abajo comentado aparece como validar si la sesión está activa, es otro llamado asincrono
+        // acá hay mas documentacion sobre manejo de sesiones con RN
+        // https://medium.com/@rossbulat/react-native-user-authentication-flow-explained-d988905ba106
+        // https://www.youtube.com/watch?v=XME68dWpKyc 
+      });
+  }
+
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.screen} enabled>
       <ImageBackground
@@ -31,6 +58,9 @@ export default function LoginScreen({ navigation }) {
               leftIconType="awesome"
               labelActiveColor="#fed501"
               underlineActiveColor="#fed501"
+
+              value={email}
+              onChangeText={(value) => setEmail(value)}
             />
             <TextInput
               label="Contraseña"
@@ -39,6 +69,8 @@ export default function LoginScreen({ navigation }) {
               labelActiveColor="#fed501"
               underlineActiveColor="#fed501"
               secureTextEntry={true}
+              value={password}
+              onChangeText={(value) => setPassword(value)}
             />
             <CheckBox
               title="Conservar la sesión"
@@ -56,7 +88,9 @@ export default function LoginScreen({ navigation }) {
                   borderRadius: 6,
                   width: 100
                 }}
-                onPress={() => RootNavigation.navigate("Home")}
+                //onPress={() => RootNavigation.navigate("Home")}
+                //onPress ={() => alert(password)}
+                onPress={validation}
               >
                 <Text style={styles.textButton}>Ingresar</Text>
               </TouchableOpacity>
@@ -67,6 +101,61 @@ export default function LoginScreen({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+////////////// Manejo de sesiones //////////////////////////////////////////////
+
+// initAuthToken = async () => {
+//   const authData = await AsyncStorage.getItem('authentication_data');
+
+//   if (authData !== null) {
+//     const authDataJson = JSON.parse(authData);
+
+//     // get user data url api
+//     fetch(consts.API_URL + '/users/populate-settings', {
+//       headers: {
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         authToken: authData.authToken,
+//         deviceId: authData.deviceId
+//       }),
+//       method: "POST"
+//     })
+//       .then(res => res.json())
+//       .then(data => {
+
+//         if (data.ack === 'success') {
+//           this.populateUserSettings(data.response);
+//         } else {
+//           this.props.navigation.navigate("SignIn");
+//         }
+//       })
+//       .catch(e => {
+//         this.setState({
+//           error: true
+//         });
+//       });
+
+//   } else {
+//     this.props.navigation.navigate("SignIn");
+//   }
+// }
+
+
+// componentDidUpdate() {
+//   if(this.props.userSettings !== undefined) {
+//     this.props.navigate("Home");
+//   }
+// }
+
+// componentDidMount() {  
+//   this.initAuthToken();
+// }
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 const styles = StyleSheet.create({
   screen: {

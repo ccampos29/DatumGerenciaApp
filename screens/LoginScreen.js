@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   ImageBackground,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from "react-native";
 import TextInput from "react-native-textinput-with-icons";
 import { CheckBox } from "react-native-elements";
@@ -16,30 +17,52 @@ import * as RootNavigation from './RootNavigation';
 import api from "../src/Services/Api"
 
 
-export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = React.useState();
-  const [password, setPassword] = React.useState();
+export default function LoginScreen({AuthContext}) {
+  
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  var validation = async () => {
-    alert(email + " "+ password);
-    await fetch('https://www.hardeepcoder.site/api/login', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ "email": email, "password": password })
-    }).then(res => res.json())
-      .then(resData => {
-        alert(resData.message);
-        // Aca se almacena la sesión con el token en el AsyncStorage 
-        // Con los metodos getItem('authentication_data'); y setItem('authentication_data');
-        // Abajo comentado aparece como validar si la sesión está activa, es otro llamado asincrono
-        // acá hay mas documentacion sobre manejo de sesiones con RN
-        // https://medium.com/@rossbulat/react-native-user-authentication-flow-explained-d988905ba106
-        // https://www.youtube.com/watch?v=XME68dWpKyc 
-      });
-  }
+  const { signIn } = React.useContext(AuthContext);
+
+  // var login = async () => {
+  //   alert(email + " "+ password);
+  //   await fetch('https://www.hardeepcoder.site/api/login', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({ "email": email, "password": password })
+  //   }).then(res => res.json())
+  //     .then(resData => {
+  //       alert(resData.message);
+  //       // Aca se almacena la sesión con el token en el AsyncStorage 
+  //       // Con los metodos getItem('authentication_data'); y setItem('authentication_data');
+  //       // Abajo comentado aparece como validar si la sesión está activa, es otro llamado asincrono
+  //       // acá hay mas documentacion sobre manejo de sesiones con RN
+  //       // https://medium.com/@rossbulat/react-native-user-authentication-flow-explained-d988905ba106
+  //       // https://www.youtube.com/watch?v=XME68dWpKyc 
+  //     });
+  // }
+
+  // var login2 = async () => {
+  //   await fetch('https://api.github.com/user', {
+  //     // method: 'GET',
+  //     headers: {
+  //       'Accept': 'application/vnd.github.v3+json',
+  //       'Authorization': "Basic bmljb2xhc2ZvcmVyb3M6TmYxMDk0OTY4NDU5"
+  //     }
+  //   }).then(res => res.json())
+  //     .then(resData => {
+  //       if(email === resData.login){
+  //         AsyncStorage.setItem('userToken', resData.login);
+  //         alert(resData.login);
+  //         navigation.navigate("Home");
+  //       }else{
+  //         alert("Mal usuario");
+  //       }
+  //     });
+  // }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.screen} enabled>
@@ -58,9 +81,10 @@ export default function LoginScreen({ navigation }) {
               leftIconType="awesome"
               labelActiveColor="#fed501"
               underlineActiveColor="#fed501"
+              autoCapitalize="none"
 
               value={email}
-              onChangeText={(value) => setEmail(value)}
+              onChangeText={setEmail}
             />
             <TextInput
               label="Contraseña"
@@ -70,7 +94,7 @@ export default function LoginScreen({ navigation }) {
               underlineActiveColor="#fed501"
               secureTextEntry={true}
               value={password}
-              onChangeText={(value) => setPassword(value)}
+              onChangeText={setPassword}
             />
             <CheckBox
               title="Conservar la sesión"
@@ -90,7 +114,8 @@ export default function LoginScreen({ navigation }) {
                 }}
                 //onPress={() => RootNavigation.navigate("Home")}
                 //onPress ={() => alert(password)}
-                onPress={validation}
+                //onPress={login2}
+                onPress={() => signIn({ email:email, password:password })}
               >
                 <Text style={styles.textButton}>Ingresar</Text>
               </TouchableOpacity>

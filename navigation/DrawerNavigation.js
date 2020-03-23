@@ -29,6 +29,11 @@ function DrawerMenu(props) {
 }
 
 function Menu(props) {
+  
+  //const { signOut } = React.useContext(AuthContext);
+
+  // console.log(props.signOut);
+
   return (
     <View style={styles.container}>
       <View style={styles.bgContainer}>
@@ -50,9 +55,8 @@ function Menu(props) {
         titleName="Home"
         navigation={() => props.navigation.dispatch(
                             CommonActions.reset({
-                              index: 1,
+                              index: 0,
                               routes: [
-                                { name: 'Login' },
                                 { name: 'Home' },
                                 { name: 'About' }
                               ],
@@ -68,7 +72,9 @@ function Menu(props) {
       <DrawerMenu
         iconName="arrow-left"
         titleName="Logout"
-        navigation={() => RootNavigation.navigate("Login")}
+        navigation={() => {
+          props.signOut();
+        }}
       />
     </View>
   );
@@ -76,15 +82,25 @@ function Menu(props) {
 
 const Drawer = createDrawerNavigator();
 
-function MyDrawer() {
+function MyDrawer({AuthContext}) {
+
+  // console.log(AuthContext);
+
+  const { signOut } = React.useContext(AuthContext);
+
+  // console.log(signOut);
+
+  const MenuComponent = (props) => ( <Menu {...props} signOut={signOut} />);
+
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Drawer.Navigator drawerContent={props => <Menu {...props} />}>
-        <Drawer.Screen name="Login" component={LoginScreen} options={{ gestureEnabled: false }} />
+    // <NavigationContainer ref={navigationRef} independent={true}>
+      <Drawer.Navigator drawerContent={MenuComponent}>
+      {/* <Drawer.Navigator drawerContent={props => Menu(...props,signOut)}> */}
         <Drawer.Screen name="Home" component={HomeScreen} />
+        {/* <Drawer.Screen name="Login" component={LoginScreen} options={{ gestureEnabled: false }} /> */}
         <Drawer.Screen name="About" component={AboutScreen} />
       </Drawer.Navigator>
-    </NavigationContainer>
+    //</NavigationContainer>
   );
 }
 export default MyDrawer;

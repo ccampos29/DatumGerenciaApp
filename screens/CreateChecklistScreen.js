@@ -15,20 +15,8 @@ function Create(){
 
 
 export default function CreateScreen({ navigation }) {
-  // const [state, setState] = React.useState('');
   
-  // _getUser = async () =>{
-  //   let user;
-  //   try {
-  //     user = await AsyncStorage.getItem('userToken');
-  //   } catch(e) {
-  //     console.log('error obteniendo data');
-  //   }
-
-  //   setState({username:user});
-  // }
-
-  // _getUser();
+  //Autenticacion de checklist
 
   return (
       Create()

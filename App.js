@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AppLoading } from 'expo';
 import { navigationRef } from "./screens/RootNavigation";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // export default function App() {
 //   return <DrawerNavigation />;
@@ -19,23 +20,33 @@ export default function App({ navigation }) {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
+        case 'SPINNER':
+          return {
+            ...prevState,
+            userToken: action.token,
+            isLoading: false,
+            spinner:true,
+          };
         case 'RESTORE_TOKEN':
           return {
             ...prevState,
             userToken: action.token,
             isLoading: false,
+            spinner:false,
           };
         case 'SIGN_IN':
           return {
             ...prevState,
             isSignout: false,
             userToken: action.token,
+            spinner:false,
           };
         case 'SIGN_OUT':
           return {
             ...prevState,
             isSignout: true,
             userToken: null,
+            spinner:false,
           };
       }
     },
@@ -74,7 +85,8 @@ export default function App({ navigation }) {
         // We will also need to handle errors if sign in failed
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
-
+        dispatch({ type: 'SPINNER', token: null });
+        
         await fetch('https://api.github.com/user', {
           // method: 'GET',
           headers: {
@@ -83,19 +95,20 @@ export default function App({ navigation }) {
           }
         }).then(res => res.json())
           .then(resData => {
+
             if(data.email === resData.login){
               AsyncStorage.setItem('userToken', resData.login);
-              alert(resData.login);
               dispatch({ type: 'SIGN_IN', token: resData.login });
             }else{
-              alert("Mal usuario");
               dispatch({ type: 'SIGN_IN', token: null });
+              alert("Mal usuario");
             }
           });
 
       },
       signOut: async () => {
         try {
+          //limpiar toda
           await AsyncStorage.removeItem('userToken');
         } catch(e) {
           console.log("error removiendo el token");
@@ -126,6 +139,11 @@ export default function App({ navigation }) {
         <AppLoading/>
       ):(
         <NavigationContainer ref={navigationRef}>
+          <Spinner
+            visible={state.spinner}
+            textContent={'Cargando...'}
+            textStyle={{ color: '#FFF' }}
+          />
           <Stack.Navigator headerMode='none'>
             {state.userToken == null ? (
               // No token found, user isn't signed in

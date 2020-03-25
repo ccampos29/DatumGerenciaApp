@@ -46,7 +46,7 @@ function Menu(props) {
           </View>
           <View style={styles.userNombre}>
             <Text style={styles.userTitulo}>Datum Position</Text>
-            <Text style={styles.userSubTitulo}>nombre de usuario</Text>
+            <Text style={styles.userSubTitulo}>{props.userToken.userName}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -82,16 +82,14 @@ function Menu(props) {
 
 const Drawer = createDrawerNavigator();
 
-function MyDrawer({AuthContext}) {
+function MyDrawer({properties}) {
 
-  // console.log(AuthContext);
-
-  const { signOut } = React.useContext(AuthContext);
+  const { signOut } = React.useContext(properties.AuthContext);
 
   // console.log(signOut);
 
-  const MenuComponent = (props) => ( <Menu {...props} signOut={signOut} />);
-
+  const MenuComponent = (props) => ( <Menu {...props} signOut={signOut} userToken={JSON.parse(properties.userToken)}/>);
+  
   return (
     // <NavigationContainer ref={navigationRef} independent={true}>
       <Drawer.Navigator drawerContent={MenuComponent}>

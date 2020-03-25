@@ -33,12 +33,15 @@ function Home({navigation}) {
 }
 
 function _onPress(item,navigation){
+  //¿navigation.toggleDrawer()
   navigation.navigate("CreateChecklist");
 }
 
 const Stack = createStackNavigator();
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen(props) {
+
+  //que pasa si quito el props?, funcionara?
 
   return (
     <Stack.Navigator
@@ -61,7 +64,7 @@ export default function HomeScreen({ navigation }) {
           headerLeft: () => (
             <TouchableOpacity 
               style= {styles.MenuStyle}
-              onPress={() => navigation.toggleDrawer()}
+              onPress={() => props.navigation.toggleDrawer()}
               hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
               <Icon
                 name='bars'

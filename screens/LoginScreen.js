@@ -96,16 +96,7 @@ export default function LoginScreen({AuthContext}) {
               value={password}
               onChangeText={setPassword}
             />
-            <CheckBox
-              title="Conservar la sesión"
-              containerStyle={{
-                backgroundColor: "white",
-                borderColor: "white",
-                marginLeft: "-3%"
-              }}
-              textStyle={{ fontWeight: "normal" }}
-            />
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "center", marginTop:20 }}>
               <TouchableOpacity
                 style={{
                   backgroundColor: "#fed501",

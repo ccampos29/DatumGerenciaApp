@@ -20,13 +20,16 @@ export default function App({ navigation }) {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
-        case 'SPINNER':
+        case 'SPINNER_ON':
           return {
             ...prevState,
-            userToken: action.token,
-            isLoading: false,
             spinner:true,
           };
+        case 'SPINNER_OFF':
+        return {
+          ...prevState,
+          spinner:false,
+        };
         case 'RESTORE_TOKEN':
           return {
             ...prevState,
@@ -85,28 +88,49 @@ export default function App({ navigation }) {
         // We will also need to handle errors if sign in failed
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
-        dispatch({ type: 'SPINNER', token: null });
-        
-        await fetch('https://api.github.com/user', {
-          // method: 'GET',
+        dispatch({ type: 'SPINNER_ON' });
+        await fetch('http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/user/authenticate', {
+          method: 'POST',
           headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            'Authorization': "Basic bmljb2xhc2ZvcmVyb3M6TmYxMDk0OTY4NDU5"
-          }
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ "username": data.email, "password": data.password })
         }).then(res => res.json())
           .then(resData => {
+            var userToken = {};
 
-            if(data.email === resData.login){
-              AsyncStorage.setItem('userToken', resData.login);
-              dispatch({ type: 'SIGN_IN', token: resData.login });
+            if(resData.token!=null){
+              userToken.token = resData.token;
+              userToken.userId = resData.user.id;
+              userToken.userName = resData.user.name;
+              userToken.userEmail = resData.user.email;
+              userToken.userTypeId = resData.user.tipo_usuario_id;
+              
+              var token2Store = JSON.stringify(userToken);
+              AsyncStorage.setItem('userToken', token2Store);
+              dispatch({ type: 'SIGN_IN', token: token2Store });
             }else{
               dispatch({ type: 'SIGN_IN', token: null });
               alert("Mal usuario");
             }
+
+            // if(data.email === resData.login){
+            //   AsyncStorage.setItem('userToken', resData.login);
+            //   dispatch({ type: 'SIGN_IN', token: resData.login });
+            // }else{
+            //   dispatch({ type: 'SIGN_IN', token: null });
+            //   alert("Mal usuario");
+            // }
+          }).catch(e=>{
+            console.log("Hay un error!, " + e);
+            dispatch({ type: 'SPINNER_OFF' });
           });
 
       },
       signOut: async () => {
+
+        dispatch({ type: 'SPINNER_ON' });
+
         try {
           //limpiar toda
           await AsyncStorage.removeItem('userToken');
@@ -125,13 +149,19 @@ export default function App({ navigation }) {
 
         dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
       },
+      spinnerOn: async () => {
+        dispatch({ type: 'SPINNER_ON'});
+      },
+      spinnerOff: async () => {
+        dispatch({ type: 'SPINNER_OFF'});
+      },
     }),
     []
   );
 
   const LoginComponent = () => (<LoginScreen AuthContext={AuthContext} /> );
 
-  const DrawerComponent = () => (<MyDrawer AuthContext={AuthContext} /> );
+  const DrawerComponent = () => (<MyDrawer properties={{ "AuthContext":AuthContext, "userToken":state.userToken }}/> );
 
   return (
     <AuthContext.Provider value={authContext}>

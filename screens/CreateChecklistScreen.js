@@ -13,7 +13,7 @@ export default function CreateScreen({ navigation }) {
 
   //Autenticacion de checklist
 
-  const { values, isSubmitting, setFieldValue } = useFormik({
+  const { values, isSubmitting, setFieldValue, handleSubmit } = useFormik({
     initialValues:
     {
       plate: '',
@@ -27,7 +27,11 @@ export default function CreateScreen({ navigation }) {
       observation: ''
 
     },
-    onsubmit: values => {
+    onSubmit: values => {
+      alert("Hola mundo se realizó un submit ");
+      alert(values.plate);
+      // Realizar validacion
+      // O validar en tiempo real, ver tutorial https://www.youtube.com/watch?v=0vx0NS-ok04
 
     },
 
@@ -92,41 +96,42 @@ export default function CreateScreen({ navigation }) {
             </Item>
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="calendar" /> <Text >  Fecha del siguiente checklist</Text></Label>
-              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.dateNextCheckList} onChangeText={text => setFieldValue('dateCheckList', text)} />
+              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.dateNextCheckList} onChangeText={text => setFieldValue('dateNextCheckList', text)} />
             </Item>
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} name="ios-clock" /> <Text >  Hora del checklist *</Text></Label>
               {/* <Text style={{ margin: 10 }}>{new Date().toLocaleTimeString()}</Text> */}
-              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={new Date().toLocaleTimeString()} onChangeText={text => setFieldValue('dateCheckList', text)} />
+              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={new Date().toLocaleTimeString()} onChangeText={text => setFieldValue('time', text)} />
             </Item>
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="plus" /> <Text >  Medición actual*</Text></Label>
               {/* <Text style={{ margin: 10 }}>{new Date().toLocaleDateString()}</Text> */}
-              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={''} onChangeText={text => setFieldValue('dateCheckList', text)} />
+              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.currentMeasurement} onChangeText={text => setFieldValue('currentMeasurement', text)} />
             </Item>
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="plus" /> <Text >  Medición del siguiente checklist</Text></Label>
-              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={''} onChangeText={text => setFieldValue('dateCheckList', text)} />
+              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.nextMeasurement} onChangeText={text => setFieldValue('nextMeasurement', text)} />
             </Item>
           </Card>
           <Card>
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} name="ios-text" /> <Text >  Observaciones</Text></Label>
-              <Textarea style={{ width: 300, marginBottom: 10 }} rowSpan={5} bordered />
+              <Textarea style={{ width: 300, marginBottom: 10 }} rowSpan={5} bordered value={values.observation} onChangeText={text => setFieldValue('observation', text)}/>
             </Item>
           </Card>
           <Card>
-            <TouchableOpacity
+            <Button
               style={{
                 backgroundColor: "#B98105",
                 borderRadius: 6,
-                width: 355,
-                marginBottom:20
+                marginBottom:20,
+                textAlign:'center'
+
               }}
-              onPress={console.log("Crear checklist")}
+              // onPress={handleSubmit} para hacerle submit al formulario
             >
               <Text style={styles.textButton}>Crear</Text>
-            </TouchableOpacity>
+            </Button>
           </Card>
         </Form>
       </Content>
@@ -189,7 +194,9 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     color: "#FFFFFF",
     fontSize: 16,
-    textAlign:'center'
+    marginLeft:130
+    
+    
   }
 
 });

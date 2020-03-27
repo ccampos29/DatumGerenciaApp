@@ -88,7 +88,7 @@ export default function App({ navigation }) {
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         dispatch({ type: 'SPINNER_ON' });
-        await fetch('http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/user/authenticate', {
+        await fetch('http://192.168.1.80:80/datum_gerencia-master/frontend/web/index.php/Api/user/authenticate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

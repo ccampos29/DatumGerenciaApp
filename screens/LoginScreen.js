@@ -24,45 +24,6 @@ export default function LoginScreen({AuthContext}) {
 
   const { signIn } = React.useContext(AuthContext);
 
-  // var login = async () => {
-  //   alert(email + " "+ password);
-  //   await fetch('https://www.hardeepcoder.site/api/login', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({ "email": email, "password": password })
-  //   }).then(res => res.json())
-  //     .then(resData => {
-  //       alert(resData.message);
-  //       // Aca se almacena la sesión con el token en el AsyncStorage 
-  //       // Con los metodos getItem('authentication_data'); y setItem('authentication_data');
-  //       // Abajo comentado aparece como validar si la sesión está activa, es otro llamado asincrono
-  //       // acá hay mas documentacion sobre manejo de sesiones con RN
-  //       // https://medium.com/@rossbulat/react-native-user-authentication-flow-explained-d988905ba106
-  //       // https://www.youtube.com/watch?v=XME68dWpKyc 
-  //     });
-  // }
-
-  // var login2 = async () => {
-  //   await fetch('https://api.github.com/user', {
-  //     // method: 'GET',
-  //     headers: {
-  //       'Accept': 'application/vnd.github.v3+json',
-  //       'Authorization': "Basic bmljb2xhc2ZvcmVyb3M6TmYxMDk0OTY4NDU5"
-  //     }
-  //   }).then(res => res.json())
-  //     .then(resData => {
-  //       if(email === resData.login){
-  //         AsyncStorage.setItem('userToken', resData.login);
-  //         alert(resData.login);
-  //         navigation.navigate("Home");
-  //       }else{
-  //         alert("Mal usuario");
-  //       }
-  //     });
-  // }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.screen} enabled>
@@ -117,59 +78,6 @@ export default function LoginScreen({AuthContext}) {
     </KeyboardAvoidingView>
   );
 }
-
-////////////////////////////////////////////////////////////////////////////////
-////////////// Manejo de sesiones //////////////////////////////////////////////
-
-// initAuthToken = async () => {
-//   const authData = await AsyncStorage.getItem('authentication_data');
-
-//   if (authData !== null) {
-//     const authDataJson = JSON.parse(authData);
-
-//     // get user data url api
-//     fetch(consts.API_URL + '/users/populate-settings', {
-//       headers: {
-//         'Accept': 'application/json',
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({
-//         authToken: authData.authToken,
-//         deviceId: authData.deviceId
-//       }),
-//       method: "POST"
-//     })
-//       .then(res => res.json())
-//       .then(data => {
-
-//         if (data.ack === 'success') {
-//           this.populateUserSettings(data.response);
-//         } else {
-//           this.props.navigation.navigate("SignIn");
-//         }
-//       })
-//       .catch(e => {
-//         this.setState({
-//           error: true
-//         });
-//       });
-
-//   } else {
-//     this.props.navigation.navigate("SignIn");
-//   }
-// }
-
-
-// componentDidUpdate() {
-//   if(this.props.userSettings !== undefined) {
-//     this.props.navigate("Home");
-//   }
-// }
-
-// componentDidMount() {  
-//   this.initAuthToken();
-// }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 

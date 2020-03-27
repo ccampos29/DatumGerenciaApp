@@ -15,9 +15,9 @@ import { url } from "../src/constants/Urls"
 import Card from "./UI/Card";
 import * as RootNavigation from './RootNavigation';
 import api from "../src/Services/Api"
+import { AuthContext } from './../context/AuthContext';
 
-
-export default function LoginScreen({AuthContext}) {
+export default function LoginScreen() {
   
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');

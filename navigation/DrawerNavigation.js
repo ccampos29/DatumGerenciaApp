@@ -11,8 +11,9 @@ import { navigationRef } from "./../screens/RootNavigation";
 import HomeScreen from "./../screens/HomeScreen";
 import AboutScreen from "./../screens/AboutScreen";
 import LoginScreen from "./../screens/LoginScreen";
-import * as RootNavigation from './../screens/RootNavigation'
-
+import * as RootNavigation from './../screens/RootNavigation';
+import { AuthContext } from './../context/AuthContext';
+ 
 function DrawerMenu(props) {
   return (
     <TouchableOpacity onPress={props.navigation}>
@@ -30,10 +31,8 @@ function DrawerMenu(props) {
 
 function Menu(props) {
   
-  //const { signOut } = React.useContext(AuthContext);
-
   // console.log(props.signOut);
-
+  const { signOut } = React.useContext(AuthContext);
   return (
     <View style={styles.container}>
       <View style={styles.bgContainer}>
@@ -57,7 +56,9 @@ function Menu(props) {
                             CommonActions.reset({
                               index: 0,
                               routes: [
-                                { name: 'Home' },
+                                { name: 'Home',
+                                  params: {userToken : props.userToken},
+                                },
                                 { name: 'About' }
                               ],
                             })
@@ -73,7 +74,7 @@ function Menu(props) {
         iconName="arrow-left"
         titleName="Logout"
         navigation={() => {
-          props.signOut();
+          signOut();
         }}
       />
     </View>
@@ -84,17 +85,15 @@ const Drawer = createDrawerNavigator();
 
 function MyDrawer({properties}) {
 
-  const { signOut } = React.useContext(properties.AuthContext);
-
   // console.log(signOut);
-
-  const MenuComponent = (props) => ( <Menu {...props} signOut={signOut} userToken={JSON.parse(properties.userToken)}/>);
   
+  const MenuComponent = (props) => ( <Menu {...props} userToken={JSON.parse(properties.userToken)}/>);
+
   return (
     // <NavigationContainer ref={navigationRef} independent={true}>
       <Drawer.Navigator drawerContent={MenuComponent}>
       {/* <Drawer.Navigator drawerContent={props => Menu(...props,signOut)}> */}
-        <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen name="Home" component={HomeScreen} initialParams={ {userToken : JSON.parse(properties.userToken)} } />
         {/* <Drawer.Screen name="Login" component={LoginScreen} options={{ gestureEnabled: false }} /> */}
         <Drawer.Screen name="About" component={AboutScreen} />
       </Drawer.Navigator>

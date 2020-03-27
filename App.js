@@ -7,12 +7,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { AppLoading } from 'expo';
 import { navigationRef } from "./screens/RootNavigation";
 import Spinner from 'react-native-loading-spinner-overlay';
+import {AuthContext} from './context/AuthContext';
 
 // export default function App() {
 //   return <DrawerNavigation />;
 // }
-
-const AuthContext = React.createContext();
 
 const Stack = createStackNavigator();
 
@@ -149,19 +148,19 @@ export default function App({ navigation }) {
 
         dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
       },
-      spinnerOn: async () => {
+      spinnerOn: () => {
         dispatch({ type: 'SPINNER_ON'});
       },
-      spinnerOff: async () => {
+      spinnerOff: () => {
         dispatch({ type: 'SPINNER_OFF'});
       },
     }),
     []
   );
 
-  const LoginComponent = () => (<LoginScreen AuthContext={AuthContext} /> );
+  const LoginComponent = () => (<LoginScreen /> );
 
-  const DrawerComponent = () => (<MyDrawer properties={{ "AuthContext":AuthContext, "userToken":state.userToken }}/> );
+  const DrawerComponent = () => (<MyDrawer properties={{ "userToken":state.userToken }}/> );
 
   return (
     <AuthContext.Provider value={authContext}>

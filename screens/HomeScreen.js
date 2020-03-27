@@ -79,7 +79,7 @@ export default function HomeScreen(props) {
   return (
     <Stack.Navigator
       initialRouteName={"Home"}
-      screenOptions={{ 
+      screenOptions={{
         headerStyle: {
           backgroundColor: '#E0A729',
           height: Platform.OS === 'ios' ? 105 : 85
@@ -89,14 +89,14 @@ export default function HomeScreen(props) {
           fontWeight: 'bold',
         },
         headerTitleAlign: 'center'
-       }}>
+      }}>
       <Stack.Screen
-        name="Home" 
+        name="Home"
         component={Home}
         initialParams={{ userToken : props.route.params.userToken }}
         options={{
           headerLeft: () => (
-            <TouchableOpacity 
+            <TouchableOpacity
               style= {styles.MenuStyle}
               onPress={() => props.navigation.toggleDrawer()}
               hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
@@ -111,13 +111,13 @@ export default function HomeScreen(props) {
         }}
       />
       <Stack.Screen
-        name="CreateChecklist" 
+        name="CreateChecklist"
         component={CreateChecklist}
         options={{
           title: 'Crear Checklist',
         }}
-      />   
-    </Stack.Navigator>
+      />
+    </Stack.Navigator> 
   );
 }
 
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   elementList:{
     paddingLeft:150,
     marginTop:10,
-    marginLeft:20, 
+    marginLeft:20,
     height: 160,
     justifyContent:'center'
   },
@@ -146,10 +146,10 @@ const styles = StyleSheet.create({
   textList: {
     fontSize: 20,
     color:'black',
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     textAlign:'left',
   },
-  
+
   textCreate:{
     backgroundColor:'#A5FF8B',
     padding:10,

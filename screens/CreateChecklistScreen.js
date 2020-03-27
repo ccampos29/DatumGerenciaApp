@@ -32,6 +32,7 @@ export default function CreateScreen({ navigation, route }) {
       alert(values.plate);
       // Realizar validacion
       // O validar en tiempo real, ver tutorial https://www.youtube.com/watch?v=0vx0NS-ok04
+      // Falta subir el formulario para que el teclado no lo tape como en el login
 
     },
 
@@ -215,6 +216,7 @@ export default function CreateScreen({ navigation, route }) {
                 marginBottom:20,
               }}
               // onPress={handleSubmit} para hacerle submit al formulario
+              //onPress={navigation.navigate("Checklist")}
             >
               <Text style={styles.textButton}>Crear</Text>
             </Button>

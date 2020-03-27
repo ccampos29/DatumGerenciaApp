@@ -1,17 +1,13 @@
 import * as React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { NavigationContainer, CommonActions } from "@react-navigation/native";
+import { CommonActions } from "@react-navigation/native";
 import {
   createDrawerNavigator,
   DrawerItemList
 } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/FontAwesome";
-
-import { navigationRef } from "./../screens/RootNavigation";
 import HomeScreen from "./../screens/HomeScreen";
 import AboutScreen from "./../screens/AboutScreen";
-import LoginScreen from "./../screens/LoginScreen";
-import * as RootNavigation from './../screens/RootNavigation';
 import { AuthContext } from './../context/AuthContext';
  
 function DrawerMenu(props) {
@@ -31,8 +27,8 @@ function DrawerMenu(props) {
 
 function Menu(props) {
   
-  // console.log(props.signOut);
   const { signOut } = React.useContext(AuthContext);
+
   return (
     <View style={styles.container}>
       <View style={styles.bgContainer}>
@@ -63,7 +59,6 @@ function Menu(props) {
                               ],
                             })
                           )}
-        // navigation={() => props.navigation.navigate("Home")}
       />
       <DrawerMenu
         iconName="info-circle"
@@ -84,20 +79,14 @@ function Menu(props) {
 const Drawer = createDrawerNavigator();
 
 function MyDrawer({properties}) {
-
-  // console.log(signOut);
   
   const MenuComponent = (props) => ( <Menu {...props} userToken={JSON.parse(properties.userToken)}/>);
 
   return (
-    // <NavigationContainer ref={navigationRef} independent={true}>
       <Drawer.Navigator drawerContent={MenuComponent}>
-      {/* <Drawer.Navigator drawerContent={props => Menu(...props,signOut)}> */}
         <Drawer.Screen name="Home" component={HomeScreen} initialParams={ {userToken : JSON.parse(properties.userToken)} } />
-        {/* <Drawer.Screen name="Login" component={LoginScreen} options={{ gestureEnabled: false }} /> */}
         <Drawer.Screen name="About" component={AboutScreen} />
       </Drawer.Navigator>
-    //</NavigationContainer>
   );
 }
 export default MyDrawer;

@@ -8,14 +8,21 @@ import { AppLoading } from 'expo';
 import { navigationRef } from "./screens/RootNavigation";
 import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from './context/AuthContext';
-
-// export default function App() {
-//   return <DrawerNavigation />;
-// }
+import * as Font from 'expo-font';
 
 const Stack = createStackNavigator();
 
 export default function App({ navigation }) {
+
+  var loadFonts = async () => {
+    await Font.loadAsync({
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf')
+    });
+  }
+
+  loadFonts();
+
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -88,7 +95,7 @@ export default function App({ navigation }) {
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         dispatch({ type: 'SPINNER_ON' });
-        await fetch('http://192.168.1.80:80/datum_gerencia-master/frontend/web/index.php/Api/user/authenticate', {
+        await fetch('http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/user/authenticate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -101,6 +108,7 @@ export default function App({ navigation }) {
             if(resData.token!=null){
               userToken.token = resData.token;
               userToken.userId = resData.user.id;
+              userToken.userCC = resData.user.id_number;
               userToken.userName = resData.user.name;
               userToken.userEmail = resData.user.email;
               userToken.userTypeId = resData.user.tipo_usuario_id;
@@ -192,28 +200,6 @@ export default function App({ navigation }) {
           
         </NavigationContainer>
         )}
-
-
-        {/* <Stack.Navigator>
-          {state.isLoading ? (
-            <AppLoading/>
-            // // We haven't finished checking for the token yet
-            // <Stack.Screen name="Splash" component={SplashScreen} />
-          ) : state.userToken == null ? (
-            // No token found, user isn't signed in
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{
-            // When logging out, a pop animation feels intuitive
-                animationTypeForReplace: state.isSignout ? 'pop' : 'push',
-              }}
-            />
-          ) : (
-            // User is signed in
-            <Stack.Screen name="Drawer" component={MyDrawer} />
-          )}
-        </Stack.Navigator> */}
     </AuthContext.Provider>
   );
 }

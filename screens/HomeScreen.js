@@ -39,11 +39,18 @@ function Home({navigation,route}) {
 }
 
 async function _onPress(item,navigation,route, spinnerOn, spinnerOff){
-  
   //Autenticar el usuario
 
   spinnerOn();
-  await fetch('http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist', {
+
+  var parametros = new URLSearchParams({
+    // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
+    user_id: 18,
+  });
+
+  var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+
+  await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -51,19 +58,23 @@ async function _onPress(item,navigation,route, spinnerOn, spinnerOff){
         }
       }).then(res => res.json())
         .then(resData => {
+
+          if(resData.status==="success"){
+            spinnerOff();
+            navigation.navigate("CreateChecklist",{userToken:route.params.userToken, checklistData:resData.vehiculos});
+          }else{
+            spinnerOff();
+            alert("Error autenticando el usuario para la creación de checklist");
+          }
+        }).catch(e=>{
+          alert("Error comunicandose con Datum Gerencia");
           spinnerOff();
-          navigation.navigate("CreateChecklist",{checklistData:resData[0]});
         });
 }
 
 const Stack = createStackNavigator();
 
 export default function HomeScreen(props) {
-
-  //que pasa si quito el props?, funcionara?
-
-  //console.log(props.route.params);
-  // console.log("pantalla home");
 
   return (
     <Stack.Navigator

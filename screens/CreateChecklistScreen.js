@@ -121,19 +121,18 @@ export default function CreateScreen({ navigation }) {
             </Item>
           </Card>
           <Card>
-            <Button
+            <TouchableOpacity
               style={{
                 backgroundColor: "#B98105",
                 borderRadius: 6,
                 marginBottom:20,
-                textAlign:'center'
 
               }}
               // onPress={handleSubmit} para hacerle submit al formulario
-              //onPress={navigation.navigate("Checklist")}
+               onPress={navigation.navigate("Checklist")}
             >
               <Text style={styles.textButton}>Crear</Text>
-            </Button>
+            </TouchableOpacity>
           </Card>
         </Form>
       </Content>

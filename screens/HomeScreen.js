@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
 import { FlatList } from 'react-native-gesture-handler';
 import CreateChecklist from './CreateChecklistScreen';
+import Checklist from './ChecklistTest';
 
 function Home({navigation}) {
   const data = [
@@ -81,6 +82,13 @@ export default function HomeScreen(props) {
         component={CreateChecklist}
         options={{
           title: 'Crear Checklist',
+        }}
+      />
+      <Stack.Screen
+        name="Checklist"
+        component={Checklist}
+        options={{
+          title: 'Calificar Checklist',
         }}
       />
     </Stack.Navigator> 

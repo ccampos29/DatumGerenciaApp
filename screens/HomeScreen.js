@@ -6,9 +6,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
 import { FlatList } from 'react-native-gesture-handler';
 import CreateChecklist from './CreateChecklistScreen';
+import { navigate } from './RootNavigation';
+import { AuthContext } from './../context/AuthContext';
 import Checklist from './ChecklistTest';
 
-function Home({navigation}) {
+function Home({navigation,route}) {
   const data = [
     { key: '1', label: 'CHECKLIST', crear: 'CREAR', ver: 'VER', image: require('./../assets/checklist.png') },
     // { key: 2, label: 'COMBUSTIBLES', crear: 'CREAR', ver: 'VER', image: require('./../assets/combustible.png') },
@@ -16,13 +18,16 @@ function Home({navigation}) {
     // { key: 4, label: 'NOVEDADES', crear: 'CREAR', ver: 'VER', image: require('./../assets/novedades.png') },
   ];
 
+  const { spinnerOn } = React.useContext(AuthContext);
+  const { spinnerOff } = React.useContext(AuthContext);
+  
   return (
     <View style={styles.container}>
       <FlatList
         data={data}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={()=>_onPress(item,navigation)}>
+            onPress={()=>_onPress(item,navigation,route, spinnerOn, spinnerOff)}>
             <ImageBackground source={item.image} style={styles.elementList}>
               <Text style={styles.textList}>{item.label}</Text>
             </ImageBackground>
@@ -33,16 +38,43 @@ function Home({navigation}) {
   );
 }
 
-function _onPress(item,navigation){
-  //¿navigation.toggleDrawer()
-  navigation.navigate("CreateChecklist");
+async function _onPress(item,navigation,route, spinnerOn, spinnerOff){
+  //Autenticar el usuario
+
+  spinnerOn();
+
+  var parametros = new URLSearchParams({
+    // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
+    user_id: 18,
+  });
+
+  var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+
+  await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + route.params.userToken.token
+        }
+      }).then(res => res.json())
+        .then(resData => {
+
+          if(resData.status==="success"){
+            spinnerOff();
+            navigation.navigate("CreateChecklist",{userToken:route.params.userToken, checklistData:resData.vehiculos});
+          }else{
+            spinnerOff();
+            alert("Error autenticando el usuario para la creación de checklist");
+          }
+        }).catch(e=>{
+          alert("Error comunicandose con Datum Gerencia");
+          spinnerOff();
+        });
 }
 
 const Stack = createStackNavigator();
 
 export default function HomeScreen(props) {
-
-  //que pasa si quito el props?, funcionara?
 
   return (
     <Stack.Navigator
@@ -61,6 +93,7 @@ export default function HomeScreen(props) {
       <Stack.Screen
         name="Home"
         component={Home}
+        initialParams={{ userToken : props.route.params.userToken }}
         options={{
           headerLeft: () => (
             <TouchableOpacity

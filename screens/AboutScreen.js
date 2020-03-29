@@ -14,6 +14,9 @@ function About(){
 const Stack = createStackNavigator();
 
 export default function AboutScreen({ navigation }) {
+
+  //console.log("pantalla about");
+
   return (
       <Stack.Navigator>
         <Stack.Screen 

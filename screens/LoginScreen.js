@@ -10,14 +10,10 @@ import {
   AsyncStorage
 } from "react-native";
 import TextInput from "react-native-textinput-with-icons";
-import { CheckBox } from "react-native-elements";
-import { url } from "../src/constants/Urls"
 import Card from "./UI/Card";
-import * as RootNavigation from './RootNavigation';
-import api from "../src/Services/Api"
+import { AuthContext } from './../context/AuthContext';
 
-
-export default function LoginScreen({AuthContext}) {
+export default function LoginScreen() {
   
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -64,9 +60,6 @@ export default function LoginScreen({AuthContext}) {
                   borderRadius: 6,
                   width: 100
                 }}
-                //onPress={() => RootNavigation.navigate("Home")}
-                //onPress ={() => alert(password)}
-                //onPress={login2}
                 onPress={() => signIn({ email:email, password:password })}
               >
                 <Text style={styles.textButton}>Ingresar</Text>

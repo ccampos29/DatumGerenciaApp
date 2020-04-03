@@ -8,7 +8,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import CreateChecklist from './CreateChecklistScreen';
 import { navigate } from './RootNavigation';
 import { AuthContext } from './../context/AuthContext';
-
+import ChecklistScreen from './ChecklistTest';
 
 function Home({navigation,route}) {
   const data = [
@@ -115,6 +115,13 @@ export default function HomeScreen(props) {
         component={CreateChecklist}
         options={{
           title: 'Crear Checklist',
+        }}
+      />
+      <Stack.Screen
+        name="ChecklistScreen"
+        component={ChecklistScreen}
+        options={{
+          title: 'Llenar Checklist',
         }}
       />
     </Stack.Navigator> 

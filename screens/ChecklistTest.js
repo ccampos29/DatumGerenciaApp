@@ -7,7 +7,11 @@ import { Button, Icon, Text, Textarea, DatePicker, Form, Card, Item, Label, Pick
 
 
 
-export default function ChecklistScreen({ navigation }) {
+export default function ChecklistScreen({ navigation,route }) {
+
+  const clGroup = route.params.checklistGroup;
+
+  console.log(clGroup);
 
   //Autenticacion de checklist
   const dataArray = [

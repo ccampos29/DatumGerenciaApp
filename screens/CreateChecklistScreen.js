@@ -9,31 +9,84 @@ import { AuthContext } from './../context/AuthContext';
 
 export default function CreateScreen({ navigation, route }) {
 
+  //const { spinnerOn, spinnerOff } = React.useContext(AuthContext);
+
   const vehicles = route.params.checklistData;
 
   const { values, isSubmitting, setFieldValue, handleSubmit } = useFormik({
     initialValues:
     {
-      plate: '',
+      plate: '', //necesarios para el diligenciamiento de CL
       typeCheckList: '',
       driver: '',
-      dateCheckList: '',
+      dateCheckList: calculateDate(),
       dateNextCheckList: '',
-      time: '',
+      time: new Date().toLocaleTimeString(),
       currentMeasurement: '',
       nextMeasurement: '',
-      observation: '',
-      typeCheckListEnable: false,
+      observation: '', 
+      typeCheckListEnable: false,  //no necesarios para el diligenciamiento de CL
       checklistTypes: new Array(),
 
     },
-    onSubmit: values => {
-      alert("Hola mundo se realizó un submit ");
-      alert(values.plate);
+    onSubmit: async (values) => {
+      //console.log("Hola mundo se realizó un submit ");
+      //alert(values.plate);
       // Realizar validacion
       // O validar en tiempo real, ver tutorial https://www.youtube.com/watch?v=0vx0NS-ok04
       // Falta subir el formulario para que el teclado no lo tape como en el login
+      var bodyWS = {"Checklist": {"vehiculo_id":values.plate,
+                                  "tipo_checklist_id":values.typeCheckList,
+                                  "usuario_id":route.params.userToken.userId,
+                                  "fecha_checklist":values.dateCheckList,
+                                  "fecha_siguente":values.dateNextCheckList,
+                                  "hora_medicion":values.time,
+                                  "medicion_actual":values.currentMeasurement,
+                                  "medicion_siguente":values.nextMeasurement,
+                                  "observacion":values.observation,
+                                  }
+                    };
 
+      //console.log(bodyWS);
+
+      var urlCreateCL = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/create';
+      var urlGetCalif = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificacionescheklist';
+      await fetch(urlCreateCL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + route.params.userToken.token
+            },
+            body: JSON.stringify(bodyWS)
+          }).then(res => res.json())
+            .then(resData => {
+              //console.log(resData);
+              if(resData.status==="success"){
+                // alert(resData.message);
+                // navigation.navigate('ChecklistScreen');
+                return fetch(urlGetCalif, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + route.params.userToken.token
+                  },
+                  body: JSON.stringify({"id_checklist": resData.id_checklist,"id_vehiculo": resData.id_vehiculo,"id_tipo_checklist": resData.id_tipo_checklist})
+                });
+              }else{
+                alert("Error en la creacion de Checklist, verifique el vehiculo y el tipo de checklist");
+              }
+
+            })
+            .then(res => res.json())
+            .then(resData => {
+              if(resData!=null){
+                navigation.navigate("ChecklistScreen", {checklistGroup: resData});
+              }
+            })
+            .catch(e=>{
+              console.log(e.message);
+              alert("Error comunicandose con Datum Gerencia para crear el checklist");
+            });
     },
 
 
@@ -84,6 +137,7 @@ export default function CreateScreen({ navigation, route }) {
               if(resData.status==="success"){
                 setFieldValue('checklistTypes',resData.tipos_checklist);
                 setFieldValue('typeCheckListEnable',true);
+                setFieldValue('typeCheckList', '-1');
               }else{
                 alert("Error obteniendo los tipos de checklist que tiene el vehiculo");
               }
@@ -109,7 +163,7 @@ export default function CreateScreen({ navigation, route }) {
             body: JSON.stringify({ "id_tipo_checklist": checklistTypeId, "fecha_actual": currentDate, "odometro_actual": currentMeasurement}),
           }).then(res => res.json())
             .then(resData => {
-              console.log(resData);
+              //console.log(resData);
               if(typeof resData.fecha_siguiente !== 'undefined'){
                 setFieldValue('dateNextCheckList',resData.fecha_siguiente);
                 if(typeof resData.odometro_siguiente !== 'undefined')
@@ -120,7 +174,7 @@ export default function CreateScreen({ navigation, route }) {
                 alert("Error obteniendo la informacion despues de seleccionar checklist");
               }
             }).catch(e=>{
-              console.log(e);
+              //console.log(e);
               alert("Error comunicandose con Datum Gerencia para odometro");
             });
       
@@ -181,7 +235,7 @@ export default function CreateScreen({ navigation, route }) {
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="calendar" /> <Text >  Fecha del checklist *</Text></Label>
               {/* <Text style={{ margin: 10 }}>{new Date().toLocaleDateString()}</Text> */}
-              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={calculateDate()} onChangeText={text => setFieldValue('dateCheckList', text)} />
+              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.dateCheckList} onChangeText={text => setFieldValue('dateCheckList', text)} />
             </Item>
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="calendar" /> <Text >  Fecha del siguiente checklist</Text></Label>
@@ -190,7 +244,7 @@ export default function CreateScreen({ navigation, route }) {
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} name="ios-clock" /> <Text >  Hora del checklist *</Text></Label>
               {/* <Text style={{ margin: 10 }}>{new Date().toLocaleTimeString()}</Text> */}
-              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={new Date().toLocaleTimeString()} onChangeText={text => setFieldValue('time', text)} />
+              <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.time} onChangeText={text => setFieldValue('time', text)} />
             </Item>
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="plus" /> <Text >  Medición actual*</Text></Label>
@@ -215,8 +269,8 @@ export default function CreateScreen({ navigation, route }) {
                 borderRadius: 6,
                 marginBottom:20,
               }}
-              // onPress={handleSubmit} para hacerle submit al formulario
-               onPress={navigation.navigate("Checklist")}
+              onPress={handleSubmit}
+              //onPress={()=>cargarChecklist(values)}
             >
               <Text style={styles.textButton}>Crear</Text>
             </TouchableOpacity>
@@ -228,9 +282,10 @@ export default function CreateScreen({ navigation, route }) {
 }
 
 function calculateDate() {
-  let day = new Date().getDay();
-  let month = new Date().getMonth();
-  let year = new Date().getFullYear();
+  var today = new Date();
+  let day = today.getDate();
+  let month = today.getMonth()+1;
+  let year = today.getFullYear();
   if (day < 10) {
     day = '0' + day;
   }

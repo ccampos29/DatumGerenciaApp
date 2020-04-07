@@ -49,8 +49,8 @@ export default function CreateScreen({ navigation, route }) {
 
       //console.log(bodyWS);
 
-      var urlCreateCL = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/create';
-      var urlGetCalif = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificacionescheklist';
+      var urlCreateCL = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/create';
+      var urlGetCalif = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificacionescheklist';
       await fetch(urlCreateCL, {
             method: 'POST',
             headers: {
@@ -100,7 +100,7 @@ export default function CreateScreen({ navigation, route }) {
         idVehiculo: value,
       });
     
-      var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/consultamedicion?' + parametros.toString();
+      var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/consultamedicion?' + parametros.toString();
     
       await fetch(url, {
             method: 'GET',
@@ -124,7 +124,7 @@ export default function CreateScreen({ navigation, route }) {
         id_vehiculo: value, //CARLITOS QUE SEAN IGUALES LOS PARAMETROS NOS AYUDARIA POR ACA
       });
 
-      url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/tiposchecklist?' + parametrosCL.toString();
+      url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/tiposchecklist?' + parametrosCL.toString();
     
       await fetch(url, {
             method: 'GET',
@@ -152,7 +152,7 @@ export default function CreateScreen({ navigation, route }) {
     if(checklistTypeId != "-1"){
       setFieldValue('typeCheckList', checklistTypeId);
     
-      var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/obtenerperiodicidadchecklist';
+      var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/obtenerperiodicidadchecklist';
     
       await fetch(url, {
             method: 'POST',

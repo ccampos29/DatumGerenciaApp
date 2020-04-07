@@ -8,7 +8,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import CreateChecklist from './CreateChecklistScreen';
 import { navigate } from './RootNavigation';
 import { AuthContext } from './../context/AuthContext';
-import ChecklistScreen from './ChecklistTest';
+import ChecklistScreen from './ChecklistScreen';
 
 function Home({navigation,route}) {
   const data = [
@@ -48,7 +48,7 @@ async function _onPress(item,navigation,route, spinnerOn, spinnerOff){
     user_id: 18,
   });
 
-  var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+  var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
 
   await fetch(url, {
         method: 'GET',

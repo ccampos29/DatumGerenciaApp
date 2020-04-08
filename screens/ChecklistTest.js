@@ -11,7 +11,7 @@ export default function ChecklistScreen({ navigation,route }) {
 
   const clGroup = route.params.checklistGroup;
 
-  console.log(clGroup);
+  console.log(clGroup[clGroup.length-1]);
 
   //Autenticacion de checklist
   const dataArray = [

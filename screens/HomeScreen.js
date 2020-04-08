@@ -9,11 +9,12 @@ import CreateChecklist from './CreateChecklistScreen';
 import { navigate } from './RootNavigation';
 import { AuthContext } from './../context/AuthContext';
 import ChecklistScreen from './ChecklistTest';
+import CreateFuel from './CreateFuelScreen';
 
 function Home({navigation,route}) {
   const data = [
     { key: '1', label: 'CHECKLIST', crear: 'CREAR', ver: 'VER', image: require('./../assets/checklist.png') },
-    // { key: 2, label: 'COMBUSTIBLES', crear: 'CREAR', ver: 'VER', image: require('./../assets/combustible.png') },
+    { key: '2', label: 'COMBUSTIBLES', crear: 'CREAR', ver: 'VER', image: require('./../assets/combustible.png') },
     // { key: 3, label: 'OTROS GASTOS', crear: 'CREAR', ver: 'VER', image: require('./../assets/otrosGastos.png') },
     // { key: 4, label: 'NOVEDADES', crear: 'CREAR', ver: 'VER', image: require('./../assets/novedades.png') },
   ];
@@ -41,35 +42,43 @@ function Home({navigation,route}) {
 async function _onPress(item,navigation,route, spinnerOn, spinnerOff){
   //Autenticar el usuario
 
-  spinnerOn();
+  if(item.key==='1'){
+    spinnerOn();
 
-  var parametros = new URLSearchParams({
-    // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
-    user_id: 18,
-  });
+    var parametros = new URLSearchParams({
+      // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
+      user_id: 18,
+    });
 
-  var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    var url = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
 
-  await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + route.params.userToken.token
-        }
-      }).then(res => res.json())
-        .then(resData => {
-
-          if(resData.status==="success"){
-            spinnerOff();
-            navigation.navigate("CreateChecklist",{userToken:route.params.userToken, checklistData:resData.vehiculos});
-          }else{
-            spinnerOff();
-            alert("Error autenticando el usuario para la creación de checklist");
+    await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + route.params.userToken.token
           }
-        }).catch(e=>{
-          alert("Error comunicandose con Datum Gerencia");
-          spinnerOff();
-        });
+        }).then(res => res.json())
+          .then(resData => {
+
+            if(resData.status==="success"){
+              spinnerOff();
+              navigation.navigate("CreateChecklist",{userToken:route.params.userToken, checklistData:resData.vehiculos});
+            }else{
+              spinnerOff();
+              alert("Error autenticando el usuario para la creación de checklist");
+            }
+          }).catch(e=>{
+            alert("Error comunicandose con Datum Gerencia");
+            spinnerOff();
+          });
+  }
+
+  if(item.key==='2'){
+    navigation.navigate("CreateFuel",{userToken:route.params.userToken});
+  }
+
+  
 }
 
 const Stack = createStackNavigator();
@@ -122,6 +131,13 @@ export default function HomeScreen(props) {
         component={ChecklistScreen}
         options={{
           title: 'Llenar Checklist',
+        }}
+      />
+      <Stack.Screen
+        name="CreateFuel"
+        component={CreateFuel}
+        options={{
+          title: 'Crear Combustible',
         }}
       />
     </Stack.Navigator> 

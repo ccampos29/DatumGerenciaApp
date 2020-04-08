@@ -51,6 +51,7 @@ export default function CreateScreen({ navigation, route }) {
 
       var urlCreateCL = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/create';
       var urlGetCalif = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificacionescheklist';
+      var checklistInfo={};
       await fetch(urlCreateCL, {
             method: 'POST',
             headers: {
@@ -64,6 +65,7 @@ export default function CreateScreen({ navigation, route }) {
               if(resData.status==="success"){
                 // alert(resData.message);
                 // navigation.navigate('ChecklistScreen');
+                checklistInfo = resData;
                 return fetch(urlGetCalif, {
                   method: 'POST',
                   headers: {
@@ -80,7 +82,7 @@ export default function CreateScreen({ navigation, route }) {
             .then(res => res.json())
             .then(resData => {
               if(resData!=null){
-                navigation.navigate("ChecklistScreen", {checklistGroup: resData});
+                navigation.navigate("ChecklistScreen", {userToken: route.params.userToken.token, checklistGroup: resData, checklistInfo: checklistInfo});
               }
             })
             .catch(e=>{

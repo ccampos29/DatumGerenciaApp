@@ -263,7 +263,7 @@ export default function CreateScreen({ navigation, route }) {
             </Item>
           </Card>
           <Card>
-            <Button
+            <TouchableOpacity
               style={{
                 backgroundColor: "#B98105",
                 borderRadius: 6,
@@ -273,7 +273,7 @@ export default function CreateScreen({ navigation, route }) {
               //onPress={()=>cargarChecklist(values)}
             >
               <Text style={styles.textButton}>Crear</Text>
-            </Button>
+            </TouchableOpacity>
           </Card>
         </Form>
       </Content>

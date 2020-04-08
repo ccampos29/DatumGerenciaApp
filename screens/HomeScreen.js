@@ -8,7 +8,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import CreateChecklist from './CreateChecklistScreen';
 import { navigate } from './RootNavigation';
 import { AuthContext } from './../context/AuthContext';
-import ChecklistScreen from './ChecklistTest';
+import ChecklistScreen from './ChecklistScreen';
 import CreateFuel from './CreateFuelScreen';
 
 function Home({navigation,route}) {

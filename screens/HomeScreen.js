@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, ImageBackground,Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, ImageBackground, Alert } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,7 +11,7 @@ import { AuthContext } from './../context/AuthContext';
 import ChecklistScreen from './ChecklistScreen';
 import CreateFuel from './CreateFuelScreen';
 
-function Home({navigation,route}) {
+function Home({ navigation, route }) {
   const data = [
     { key: '1', label: 'CHECKLIST', crear: 'CREAR', ver: 'VER', image: require('./../assets/checklist.png') },
     { key: '2', label: 'COMBUSTIBLES', crear: 'CREAR', ver: 'VER', image: require('./../assets/combustible.png') },
@@ -21,14 +21,14 @@ function Home({navigation,route}) {
 
   const { spinnerOn } = React.useContext(AuthContext);
   const { spinnerOff } = React.useContext(AuthContext);
-  
+
   return (
     <View style={styles.container}>
       <FlatList
         data={data}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={()=>_onPress(item,navigation,route, spinnerOn, spinnerOff)}>
+            onPress={() => _onPress(item, navigation, route, spinnerOn, spinnerOff)}>
             <ImageBackground source={item.image} style={styles.elementList}>
               <Text style={styles.textList}>{item.label}</Text>
             </ImageBackground>
@@ -39,10 +39,10 @@ function Home({navigation,route}) {
   );
 }
 
-async function _onPress(item,navigation,route, spinnerOn, spinnerOff){
+async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
   //Autenticar el usuario
 
-  if(item.key==='1'){
+  if (item.key === '1') {
     spinnerOn();
 
     var parametros = new URLSearchParams({
@@ -50,35 +50,112 @@ async function _onPress(item,navigation,route, spinnerOn, spinnerOff){
       user_id: 18,
     });
 
-    var url = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
 
     await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + route.params.userToken.token
-          }
-        }).then(res => res.json())
-          .then(resData => {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + route.params.userToken.token
+      }
+    }).then(res => res.json())
+      .then(resData => {
 
-            if(resData.status==="success"){
-              spinnerOff();
-              navigation.navigate("CreateChecklist",{userToken:route.params.userToken, checklistData:resData.vehiculos});
-            }else{
-              spinnerOff();
-              alert("Error autenticando el usuario para la creación de checklist");
-            }
-          }).catch(e=>{
-            alert("Error comunicandose con Datum Gerencia");
-            spinnerOff();
-          });
+        if (resData.status === "success") {
+          spinnerOff();
+          navigation.navigate("CreateChecklist", { userToken: route.params.userToken, checklistData: resData.vehiculos });
+        } else {
+          spinnerOff();
+          alert("Error autenticando el usuario para la creación de checklist");
+        }
+      }).catch(e => {
+        alert("Error comunicandose con Datum Gerencia");
+        spinnerOff();
+      });
   }
 
-  if(item.key==='2'){
-    navigation.navigate("CreateFuel",{userToken:route.params.userToken});
+  if (item.key === '2') {
+
+    /////////// Proveedores ////////////////////////////////////////
+    var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/proveedores/proveedores-list';
+
+    await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+    }).then(res => res.json())
+      .then(resData => {
+        console.log(resData);
+        navigation.navigate("CreateFuel", { userToken: route.params.userToken });
+        // if(typeof resData.fecha_siguiente !== 'undefined'){
+        //   setFieldValue('dateNextCheckList',resData.fecha_siguiente);
+        //   if(typeof resData.odometro_siguiente !== 'undefined')
+        //     setFieldValue('nextMeasurement',resData.odometro_siguiente+"");
+        //   else
+        //     setFieldValue('nextMeasurement',"");
+        // }else{
+        //   alert("Error obteniendo proveedores");
+        // }
+      }).catch(e => {
+        alert("Error comunicandose con Datum Gerencia para proveedores");
+      });
+
+    /////////// Vehiculos  ////////////////////////////////////////
+    var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/vehiculos/vehiculos-list';
+
+    await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+    }).then(res => res.json())
+      .then(resData => {
+        console.log(resData);
+        //navigation.navigate("CreateFuel", { userToken: route.params.userToken });
+        // if(typeof resData.fecha_siguiente !== 'undefined'){
+        //   setFieldValue('dateNextCheckList',resData.fecha_siguiente);
+        //   if(typeof resData.odometro_siguiente !== 'undefined')
+        //     setFieldValue('nextMeasurement',resData.odometro_siguiente+"");
+        //   else
+        //     setFieldValue('nextMeasurement',"");
+        // }else{
+        //   alert("Error obteniendo proveedores");
+        // }
+      }).catch(e => {
+        alert("Error comunicandose con Datum Gerencia para proveedores");
+      });
+
+    /////////// Tipo de combustible  ////////////////////////////////////////
+    var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/tipos-combustibles/tipos-combustibles-list';
+
+    await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+    }).then(res => res.json())
+      .then(resData => {
+        console.log(resData);
+        //navigation.navigate("CreateFuel", { userToken: route.params.userToken });
+        // if(typeof resData.fecha_siguiente !== 'undefined'){
+        //   setFieldValue('dateNextCheckList',resData.fecha_siguiente);
+        //   if(typeof resData.odometro_siguiente !== 'undefined')
+        //     setFieldValue('nextMeasurement',resData.odometro_siguiente+"");
+        //   else
+        //     setFieldValue('nextMeasurement',"");
+        // }else{
+        //   alert("Error obteniendo proveedores");
+        // }
+      }).catch(e => {
+        alert("Error comunicandose con Datum Gerencia para proveedores");
+      });
   }
 
-  
+
 }
 
 const Stack = createStackNavigator();
@@ -102,13 +179,13 @@ export default function HomeScreen(props) {
       <Stack.Screen
         name="Home"
         component={Home}
-        initialParams={{ userToken : props.route.params.userToken }}
+        initialParams={{ userToken: props.route.params.userToken }}
         options={{
           headerLeft: () => (
             <TouchableOpacity
-              style= {styles.MenuStyle}
+              style={styles.MenuStyle}
               onPress={() => props.navigation.toggleDrawer()}
-              hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
+              hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}>
               <Icon
                 name='bars'
                 type='font-awesome'
@@ -140,7 +217,7 @@ export default function HomeScreen(props) {
           title: 'Crear Combustible',
         }}
       />
-    </Stack.Navigator> 
+    </Stack.Navigator>
   );
 }
 
@@ -158,35 +235,35 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
 
-  elementList:{
-    paddingLeft:150,
-    marginTop:10,
-    marginLeft:20,
+  elementList: {
+    paddingLeft: 150,
+    marginTop: 10,
+    marginLeft: 20,
     height: 160,
-    justifyContent:'center'
+    justifyContent: 'center'
   },
 
   textList: {
     fontSize: 20,
-    color:'black',
+    color: 'black',
     fontWeight: 'bold',
-    textAlign:'left',
+    textAlign: 'left',
   },
 
-  textCreate:{
-    backgroundColor:'#A5FF8B',
-    padding:10,
-    paddingTop:25,
-    paddingBottom:25,
-    textAlign:'center',
+  textCreate: {
+    backgroundColor: '#A5FF8B',
+    padding: 10,
+    paddingTop: 25,
+    paddingBottom: 25,
+    textAlign: 'center',
 
   },
-  textView:{
-    backgroundColor:'#8BFFEA',
-    padding:10,
-    paddingTop:25,
-    paddingBottom:25,
-    textAlign:'center'
+  textView: {
+    backgroundColor: '#8BFFEA',
+    padding: 10,
+    paddingTop: 25,
+    paddingBottom: 25,
+    textAlign: 'center'
 
   }
 

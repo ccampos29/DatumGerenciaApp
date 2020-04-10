@@ -95,7 +95,7 @@ export default function App({ navigation }) {
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         dispatch({ type: 'SPINNER_ON' });
-        await fetch('http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/Api/user/authenticate', {
+        await fetch('http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/user/authenticate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -112,6 +112,7 @@ export default function App({ navigation }) {
               userToken.userName = resData.user.name;
               userToken.userEmail = resData.user.email;
               userToken.userTypeId = resData.user.tipo_usuario_id;
+              userToken.userCompanyId = resData.user.empresa_id;
               
               var token2Store = JSON.stringify(userToken);
               AsyncStorage.setItem('userToken', token2Store);

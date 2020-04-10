@@ -45,7 +45,7 @@ export default function ChecklistScreen({ navigation, route }) {
                     }
         };
 
-      var urlCal = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificarcheklist';
+      var urlCal = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificarchecklist';
       await fetch(urlCal, {
             method: 'POST',
             headers: {
@@ -80,54 +80,6 @@ export default function ChecklistScreen({ navigation, route }) {
             });
     },
   });
-
-  const calificacion = (element, grupoId) => {
-
-    novedadesCalificadas.push({"grupo_novedad_id" : grupoId,
-                                "novedad_id":element.novedad.id,
-                                "criterio_calificacion_id":element.novedad.criterio_evaluacion_id,
-                                "valor_texto_calificacion":'-1',
-                                "vehiculo_id":clInfo.id_vehiculo,
-                                "tipo_checklist_id":clInfo.id_tipo_checklist,
-                                "checklis_id":clInfo.id_checklist,
-    });
-
-    if (element.novedad.criterioEvaluacion.tipo == "Lista desplegable") {
-      return (
-          <Picker
-            mode="dropdown"
-            iosIcon={<Icon name="arrow-down" />}
-            style={styles.Select}
-            enabled={true}
-            selectedValue={"4"}
-            onValueChange={value => {novedadesCalificadas[novedadesCalificadas.length-1].valor_texto_calificacion = value}}
-          >
-            <Picker.Item key="-1" label="Seleccione un estado" value="-1" />
-            <Picker.Item key="4" label="Bueno" value="4" />
-            <Picker.Item key="5" label="Regular" value="5" />
-            <Picker.Item key="6" label="Malo" value="6" />
-          </Picker>
-      )
-    } else if (element.novedad.criterioEvaluacion.tipo  == "Editable") {
-      return (<Input style={styles.InputNivel} placeholder='Ingrese un número de 0 a 10' editable={true} selectTextOnFocus={false} value={novedadesCalificadas[novedadesCalificadas.length-1].valor_texto_calificacion} onChangeText={value => novedadesCalificadas[novedadesCalificadas.length-1].valor_texto_calificacion = value} />)
-    } else {
-      return (
-        <Picker
-          mode="dropdown"
-          iosIcon={<Icon name="arrow-down" />}
-          style={styles.Select}
-          enabled={true}
-          selectedValue={novedadesCalificadas[novedadesCalificadas.length-1].valor_texto_calificacion}
-          onValueChange={value => novedadesCalificadas[novedadesCalificadas.length-1].valor_texto_calificacion = value}
-        >
-          <Picker.Item key="-1" label="Seleccione una opción" value="-1" />
-          <Picker.Item key="9" label="Si" value="9" />
-          <Picker.Item key="10" label="No" value="10" />
-        </Picker>
-      )
-    }
-  }
-
 
   //setSelectedImage({ localUri: './../assets/add3.png' });
   let [selectedImage, setSelectedImage] = React.useState(null);

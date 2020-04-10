@@ -22,7 +22,7 @@ export default function LoginScreen() {
 
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.screen} enabled>
+    //<KeyboardAvoidingView behavior="padding" style={styles.screen} enabled>
       <ImageBackground
         source={require("./../assets/background.jpg")}
         style={styles.background}
@@ -68,7 +68,7 @@ export default function LoginScreen() {
           </ScrollView>
         </Card>
       </ImageBackground>
-    </KeyboardAvoidingView>
+    //</KeyboardAvoidingView>
   );
 }
 

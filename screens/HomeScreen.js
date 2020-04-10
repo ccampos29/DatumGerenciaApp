@@ -50,7 +50,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       user_id: 18,
     });
 
-    var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    var url = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
 
     await fetch(url, {
       method: 'GET',
@@ -75,87 +75,67 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
   }
 
   if (item.key === '2') {
+    spinnerOn();
 
-    /////////// Proveedores ////////////////////////////////////////
-    var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/proveedores/proveedores-list';
+    var parameters = new URLSearchParams({
+      // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
+      id_empresa: route.params.userToken.userCompanyId,
+      id_user: 18,
+    });
+    var parametros = new URLSearchParams({
+      // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
+      user_id: 18,
+    });
 
-    await fetch(url, {
+    var urlFuel = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/createcombustible?' + parameters.toString();
+    var urlVehicle = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+
+    var fuelData;
+    var vehicleData;
+    await fetch(urlFuel, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-      },
-
+        'Authorization': 'Bearer ' + route.params.userToken.token
+      }
     }).then(res => res.json())
       .then(resData => {
-        console.log(resData);
-        navigation.navigate("CreateFuel", { userToken: route.params.userToken });
-        // if(typeof resData.fecha_siguiente !== 'undefined'){
-        //   setFieldValue('dateNextCheckList',resData.fecha_siguiente);
-        //   if(typeof resData.odometro_siguiente !== 'undefined')
-        //     setFieldValue('nextMeasurement',resData.odometro_siguiente+"");
-        //   else
-        //     setFieldValue('nextMeasurement',"");
-        // }else{
-        //   alert("Error obteniendo proveedores");
-        // }
+        if(typeof resData.centrosCostos !== 'undefined'){
+          fuelData = resData;
+          return fetch(urlVehicle, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + route.params.userToken.token}
+            });
+          
+          //navigation.navigate("CreateFuel", { userToken: route.params.userToken, fuelData: resData });
+        } 
+      }).then(res=>res.json())
+        .then(resData =>{
+          if (resData.status === "success") {
+            vehicleData = resData.vehiculos;
+            return fetch('http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/pais/pais-list', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            });  
+          }
+      }).then(res=>res.json())
+        .then(resData =>{
+          if (typeof resData !== 'undefined') {
+            spinnerOff();
+            navigation.navigate("CreateFuel", { userToken: route.params.userToken, fuelData: fuelData, vehicleData: vehicleData, countryData: resData });
+          } else {
+            spinnerOff();
+            alert("Error autenticando el usuario para la creación de checklist");
+          }
       }).catch(e => {
-        alert("Error comunicandose con Datum Gerencia para proveedores");
-      });
-
-    /////////// Vehiculos  ////////////////////////////////////////
-    var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/vehiculos/vehiculos-list';
-
-    await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-    }).then(res => res.json())
-      .then(resData => {
-        console.log(resData);
-        //navigation.navigate("CreateFuel", { userToken: route.params.userToken });
-        // if(typeof resData.fecha_siguiente !== 'undefined'){
-        //   setFieldValue('dateNextCheckList',resData.fecha_siguiente);
-        //   if(typeof resData.odometro_siguiente !== 'undefined')
-        //     setFieldValue('nextMeasurement',resData.odometro_siguiente+"");
-        //   else
-        //     setFieldValue('nextMeasurement',"");
-        // }else{
-        //   alert("Error obteniendo proveedores");
-        // }
-      }).catch(e => {
-        alert("Error comunicandose con Datum Gerencia para proveedores");
-      });
-
-    /////////// Tipo de combustible  ////////////////////////////////////////
-    var url = 'http://192.168.1.66:80/datum_gerencia-master/frontend/web/index.php/tipos-combustibles/tipos-combustibles-list';
-
-    await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-    }).then(res => res.json())
-      .then(resData => {
-        console.log(resData);
-        //navigation.navigate("CreateFuel", { userToken: route.params.userToken });
-        // if(typeof resData.fecha_siguiente !== 'undefined'){
-        //   setFieldValue('dateNextCheckList',resData.fecha_siguiente);
-        //   if(typeof resData.odometro_siguiente !== 'undefined')
-        //     setFieldValue('nextMeasurement',resData.odometro_siguiente+"");
-        //   else
-        //     setFieldValue('nextMeasurement',"");
-        // }else{
-        //   alert("Error obteniendo proveedores");
-        // }
-      }).catch(e => {
-        alert("Error comunicandose con Datum Gerencia para proveedores");
+        alert("Error comunicandose con Datum Gerencia");
+        spinnerOff();
       });
   }
-
-
 }
 
 const Stack = createStackNavigator();

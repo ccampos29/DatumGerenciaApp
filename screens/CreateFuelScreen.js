@@ -45,8 +45,66 @@ export default function CreateFuelScreen({ navigation, route }) {
       cityList: new Array(),
     },
     onSubmit: (values) => {
-      console.log("Se hizo submit con: ");
-      console.log(values);
+      //console.log("Se hizo submit con: ");
+      //console.log(values);
+
+      var bodyWS={"Combustibles":
+                    {
+                      "fecha":values.date,
+                      "hora":values.time,
+                      "tanqueo_full":values.full,
+                      "costo_por_galon":values.cost,
+                      "cantidad_combustible":values.quantity,
+                      "proveedor_id":values.provider,
+                      "numero_tiquete":values.ticketNumber,
+                      "vehiculo_id":values.vehicle,
+                      "tipo_combustible_id":values.fuelType,
+                      "usuario_id":values.chargeTo,
+                      "grupo_vehiculo_id":values.associatedGroup,
+                      "medicion_actual":values.measurement,
+                      "medicion_compare":values.measurement,
+                      "centro_costo_id":values.costsCenter,
+                      "pais_id":values.country,
+                      "departamento_id":values.department,
+                      "municipio_id":values.city,
+                      "observacion":values.observation,
+                      "imagenCombustible":values.imageSource
+                    }
+      };
+
+      //console.log(bodyWS);
+
+      var parameters = new URLSearchParams({
+        id_empresa: route.params.userToken.userCompanyId,
+        id_user: route.params.userToken.userId,
+      });
+
+      var urlStore = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/storecombustible?'+parameters.toString();
+      fetch(urlStore, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + route.params.userToken.token
+            },
+            body: JSON.stringify(bodyWS)
+          }).then(res => res.json())
+            .then(resData => {
+              //console.log(resData);
+              if(resData.status==="success"){
+                var prueba = resData.message;
+                alert(prueba);
+                navigation.navigate('Home');
+                
+              }else{
+                alert("Error en la creacion de Combustible, verifique el formulario");
+              }
+
+            })
+            .catch(e=>{
+              console.log(e.message);
+              alert("Error comunicandose con Datum Gerencia para crear el combustible");
+            });
+
     },
   });
 
@@ -204,8 +262,8 @@ return (
               onValueChange={value => setFieldValue('full', value)}
             >
               <Picker.Item key="-1" label="Seleccione una opcion..." value="-1" />
-              <Picker.Item key="Si" label="Si" value="Si" />
-              <Picker.Item key="Si" label="No" value="No" />
+              <Picker.Item key="Si" label="Si" value="1" />
+              <Picker.Item key="Si" label="No" value="0" />
             </Picker>
           </Item>
 

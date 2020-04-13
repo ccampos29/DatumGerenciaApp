@@ -50,7 +50,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       user_id: 18,
     });
 
-    var url = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    var url = 'http://192.168.1.62:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
 
     await fetch(url, {
       method: 'GET',
@@ -60,8 +60,9 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       }
     }).then(res => res.json())
       .then(resData => {
-
+       // console.log(resData);
         if (resData.status === "success") {
+          console.log("////////////////////////////////////////////////");
           spinnerOff();
           navigation.navigate("CreateChecklist", { userToken: route.params.userToken, checklistData: resData.vehiculos });
         } else {
@@ -87,9 +88,9 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       user_id: 18,
     });
 
-    var urlFuel = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/createcombustible?' + parameters.toString();
-    var urlVehicle = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
-
+    var urlFuel = 'http://192.168.1.62:80/datum_gerencia-master/frontend/web/index.php/Api/combustible/createcombustible?' + parameters.toString();
+    var urlVehicle = 'http://192.168.1.62:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    console.log(urlFuel);
     var fuelData;
     var vehicleData;
     await fetch(urlFuel, {
@@ -115,7 +116,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
         .then(resData =>{
           if (resData.status === "success") {
             vehicleData = resData.vehiculos;
-            return fetch('http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/pais/pais-list', {
+            return fetch('http://192.168.1.62:80/datum_gerencia-master/frontend/web/index.php/pais/pais-list', {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -124,6 +125,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
           }
       }).then(res=>res.json())
         .then(resData =>{
+          //console.log(resData);
           if (typeof resData !== 'undefined') {
             spinnerOff();
             navigation.navigate("CreateFuel", { userToken: route.params.userToken, fuelData: fuelData, vehicleData: vehicleData, countryData: resData });

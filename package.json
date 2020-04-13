@@ -31,7 +31,8 @@
     "react-native-screens": "2.0.0-alpha.12",
     "react-native-swipeable-flat-list": "^0.1.2",
     "react-native-textinput-with-icons": "^1.0.18",
-    "react-native-web": "~0.11.7"
+    "react-native-web": "~0.11.7",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",

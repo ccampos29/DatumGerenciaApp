@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 function About(){
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>SCREEN ABOUT</Text>
+      <Text>Información general de la aplicación</Text>
     </View>
   );  
 }
@@ -23,7 +23,7 @@ export default function AboutScreen({ navigation }) {
           name="About" 
           component={About}
           options={{
-            title: 'About',
+            title: 'Acerca de',
             headerLeft: () => (
               <TouchableOpacity 
                 style= {styles.MenuStyle}

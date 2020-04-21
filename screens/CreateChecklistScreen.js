@@ -7,6 +7,8 @@ import { Button, Textarea, DatePicker, Form, Card, Item, Label, Picker, Input, C
 //import {View, Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Switch } from 'native-base';
 import { AuthContext } from './../context/AuthContext';
 
+import AwesomeAlert from 'react-native-awesome-alerts';
+
 export default function CreateScreen({ navigation, route }) {
 
   //const { spinnerOn, spinnerOff } = React.useContext(AuthContext);
@@ -148,6 +150,7 @@ export default function CreateScreen({ navigation, route }) {
             });
     }
     
+    
   }
 
   const seleccionarChecklist = async (checklistTypeId, currentDate, currentMeasurement) => {
@@ -189,6 +192,7 @@ export default function CreateScreen({ navigation, route }) {
       <Content>
         <Form>
           <Card>
+            
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="car" /> <Text >  Vehiculo *</Text></Label>
               <Picker

@@ -6,9 +6,6 @@ import { ListItem, Body, Icon, Text, Form, Item, Label, Picker, Input, Content, 
 import * as ImagePicker from 'expo-image-picker';
 import Card from './UI/Card';
 
-// TEST
-//import { RNFetchBlob } from 'rn-fetch-blob';
-
 
 export default function ChecklistScreen({ navigation, route }) {
 
@@ -78,7 +75,6 @@ export default function ChecklistScreen({ navigation, route }) {
       //     "novedadesCalificadas": values.novedadesCalificadas,
 
       //   },
-      //   "image" : image
       // };
       // console.log(bodyWS);
       // var urlCal = 'http://192.168.1.62:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificarchecklist';

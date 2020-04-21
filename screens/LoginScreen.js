@@ -13,6 +13,7 @@ import TextInput from "react-native-textinput-with-icons";
 import Card from "./UI/Card";
 import { AuthContext } from './../context/AuthContext';
 
+
 export default function LoginScreen() {
   
   const [email, setEmail] = React.useState('');
@@ -33,7 +34,7 @@ export default function LoginScreen() {
         <Card style={styles.authContainer}>
           <ScrollView>
             <TextInput
-              label="Correo electronico"
+              label="Usuario"
               leftIcon="envelope"
               leftIconType="awesome"
               labelActiveColor="#fed501"

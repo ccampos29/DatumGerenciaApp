@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, View, StyleSheet, TouchableOpacity, AsyncStorage } from "react-native";
+import { Button, View, StyleSheet, TouchableOpacity, AsyncStorage, Alert } from "react-native";
 import MyDrawer from "./navigation/DrawerNavigation";
 import LoginScreen from "./screens/LoginScreen";
 import { NavigationContainer } from '@react-navigation/native';
@@ -10,9 +10,12 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from './context/AuthContext';
 import * as Font from 'expo-font';
 
+
+
 const Stack = createStackNavigator();
 
 export default function App({ navigation }) {
+
 
   var loadFonts = async () => {
     await Font.loadAsync({
@@ -119,7 +122,19 @@ export default function App({ navigation }) {
               dispatch({ type: 'SIGN_IN', token: token2Store });
             }else{
               dispatch({ type: 'SIGN_IN', token: null });
-              alert("Mal usuario");
+              //alert("Mal usuario");
+              Alert.alert(
+                'Error',
+                'Usuario y/o contraseña incorrectos, por favor verifique',
+                [
+                  {
+                    text: 'Cerrar',
+                    style: 'cancel',
+                  },
+                ],
+                {cancelable: false},
+              );
+             
             }
 
             // if(data.email === resData.login){

@@ -47,7 +47,7 @@ export default function ChecklistScreen({ navigation, route }) {
       
       image.append('photo', { uri: values.urlImage, name: filename, type });
       console.log(image);
-      var urlUpload = 'http://192.168.1.62:80/uploadtest/upload.php';
+      var urlUpload = 'http://192.168.100.93/php/datum_gerencia-master/frontend/web/index.php/Api/checklist/subirfotochecklist';
       await fetch(urlUpload, {
         method: 'POST',
         body: image,
@@ -77,7 +77,7 @@ export default function ChecklistScreen({ navigation, route }) {
       //   },
       // };
       // console.log(bodyWS);
-      // var urlCal = 'http://192.168.1.62:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificarchecklist';
+      // var urlCal = 'http://192.168.100.93/php/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificarchecklist';
       // await fetch(urlCal, {
       //   method: 'POST',
       //   headers: {

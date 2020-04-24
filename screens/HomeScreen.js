@@ -11,6 +11,8 @@ import { AuthContext } from './../context/AuthContext';
 import ChecklistScreen from './ChecklistScreen';
 import CreateFuel from './CreateFuelScreen';
 
+import AwesomeAlert from 'react-native-awesome-alerts';
+
 function Home({ navigation, route }) {
   const data = [
     { key: '1', label: 'CHECKLIST', crear: 'CREAR', ver: 'VER', image: require('./../assets/checklist.png') },
@@ -46,11 +48,11 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
     spinnerOn();
 
     var parametros = new URLSearchParams({
-      // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
-      user_id: 18,
+      user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
+      //user_id: 18,
     });
 
-    var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    var url = 'http://gerencia.datum-position.com/api/checklist/getvehiclebyuser?' + parametros.toString();
 
     await fetch(url, {
       method: 'GET',
@@ -60,8 +62,9 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       }
     }).then(res => res.json())
       .then(resData => {
-
+       // console.log(resData);
         if (resData.status === "success") {
+          console.log("////////////////////////////////////////////////");
           spinnerOff();
           navigation.navigate("CreateChecklist", { userToken: route.params.userToken, checklistData: resData.vehiculos });
         } else {
@@ -78,18 +81,18 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
     spinnerOn();
 
     var parameters = new URLSearchParams({
-      // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
+      id_user: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
       id_empresa: route.params.userToken.userCompanyId,
-      id_user: 18,
+      //id_user: 18,
     });
     var parametros = new URLSearchParams({
-      // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
-      user_id: 18,
+      user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
+      //user_id: 18,
     });
 
-    var urlFuel = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/createcombustible?' + parameters.toString();
-    var urlVehicle = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
-
+    var urlFuel = 'http://192.168.100.93/php/datum_gerencia-master/frontend/web/index.php/Api/combustible/createcombustible?' + parameters.toString();
+    var urlVehicle = 'http://192.168.100.93/php/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    console.log(urlFuel);
     var fuelData;
     var vehicleData;
     await fetch(urlFuel, {
@@ -115,7 +118,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
         .then(resData =>{
           if (resData.status === "success") {
             vehicleData = resData.vehiculos;
-            return fetch('http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/pais/pais-list', {
+            return fetch('http://192.168.100.93/php/datum_gerencia-master/frontend/web/index.php/pais/pais-list', {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -124,6 +127,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
           }
       }).then(res=>res.json())
         .then(resData =>{
+          //console.log(resData);
           if (typeof resData !== 'undefined') {
             spinnerOff();
             navigation.navigate("CreateFuel", { userToken: route.params.userToken, fuelData: fuelData, vehicleData: vehicleData, countryData: resData });
@@ -154,7 +158,7 @@ export default function HomeScreen(props) {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-        headerTitleAlign: 'center'
+        headerTitleAlign: 'center',
       }}>
       <Stack.Screen
         name="Home"
@@ -173,7 +177,7 @@ export default function HomeScreen(props) {
               />
             </TouchableOpacity>
           ),
-          title: 'Home',
+          title: 'Inicio',
         }}
       />
       <Stack.Screen

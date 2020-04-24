@@ -82,7 +82,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         id_user: route.params.userToken.userId,
       });
 
-      var urlStore = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/storecombustible?'+parameters.toString();
+      var urlStore = 'http://gerencia.datum-position.com/Api/combustible/storecombustible?'+parameters.toString();
       fetch(urlStore, {
             method: 'POST',
             headers: {
@@ -119,7 +119,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         idVehiculo: value,
       });
     
-      var url = 'http://192.168.1.62:80/datum_gerencia-master/frontend/web/index.php/Api/checklist/consultamedicion?' + parametros.toString();
+      var url = 'http://gerencia.datum-position.com/Api/checklist/consultamedicion?' + parametros.toString();
     
       await fetch(url, {
             method: 'GET',
@@ -149,7 +149,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         id_pais: value,
       });
     
-      var url = 'http://192.168.1.62:80/datum_gerencia-master/frontend/web/index.php/Api/combustible/getdepartamentos?' + parametros.toString();
+      var url = 'http://gerencia.datum-position.com/Api/combustible/getdepartamentos?' + parametros.toString();
     
       await fetch(url, {
             method: 'GET',
@@ -178,7 +178,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         id_departamento: value,
       });
     
-      var url = 'http://192.168.1.62:80/datum_gerencia-master/frontend/web/index.php/Api/combustible/getmunicipios?' + parametros.toString();
+      var url = 'http://gerencia.datum-position.com/Api/combustible/getmunicipios?' + parametros.toString();
     
       await fetch(url, {
             method: 'GET',

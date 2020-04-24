@@ -73,7 +73,7 @@ export default function ChecklistScreen({ navigation, route }) {
       //console.log("submit");
       //console.log(values.novedadesCalificadas.length);
       //console.log(values.novedadesCalificadas);
-      const info = new FormData();
+      var info = new FormData();
       var bodyWS = {
         "id_checklist": clInfo.id_checklist,
         "data": {
@@ -81,25 +81,28 @@ export default function ChecklistScreen({ navigation, route }) {
 
         },
       };
-      console.log(route.params.userCompanyId);
-      console.log(bodyWS);
+      // console.log(route.params.userCompanyId);
+      // console.log(bodyWS);
       // const image = new FormData();
       let filename = values.urlImage.split('/').pop();
+      // console.log(filename);
       //let filename = 'imagenChecklist';
       let match = /\.(\w+)$/.exec(filename);
       let type = match ? `image/${match[1]}` : `image`;
-      info.append('data',bodyWS);
+      console.log(bodyWS);
+      info.append('data', JSON.stringify(bodyWS));
       info.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
       var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
-      console.log(info);  
+      // console.log(info);  
       await fetch(urlCal, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + route.params.userToken
+          Accept: "*/*",
+          'Content-Type': 'multipart/form-data;',
+          Authorization: 'Bearer ' + route.params.userToken,
+          'Accept-Encoding':'gzip;q=1.0, compress;q=0.5'
         },
-        //body: JSON.stringify(bodyWS)
-        body: [info]
+        body: info
       }).then(res => res.json())
         .then(resData => {
           console.log(resData);
@@ -144,7 +147,9 @@ export default function ChecklistScreen({ navigation, route }) {
       return;
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      quality: 0.5
+    });
     if (pickerResult.cancelled === true) {
       return;
     }
@@ -163,10 +168,14 @@ export default function ChecklistScreen({ navigation, route }) {
       return;
     }
 
-    let pickerResult = await ImagePicker.launchCameraAsync();
+    let pickerResult = await ImagePicker.launchCameraAsync({
+      quality: 0.5,
+    });
     if (pickerResult.cancelled === true) {
       return;
     }
+
+    console.log(pickerResult);
 
     setSelectedImage({ localUri: pickerResult.uri });;
     //values.urlImage = pickerResult.uri;
@@ -321,7 +330,7 @@ function imageView(option, values) {
   let url = './../assets/add.png';
   if (option !== null) {
     values.urlImage = Platform.OS === "android" ? option.localUri : option.localUri.replace("file://", "");
-    console.log(values.urlImage);
+    // console.log(values.urlImage);
     return (
       <View >
         <Image source={{ uri: option.localUri }} style={styles.logo} />

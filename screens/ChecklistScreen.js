@@ -41,92 +41,82 @@ export default function ChecklistScreen({ navigation, route }) {
     },
     onSubmit: async (values) => {
 
-      // const image = new FormData();
-      // let filename = values.urlImage.split('/').pop();
-      // //let filename = 'imagenChecklist';
-      // let match = /\.(\w+)$/.exec(filename);
-      // let type = match ? `image/${match[1]}` : `image`;
-      
-      // image.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
-      // console.log(image);
-      // console.log(route.params.userToken);
-      // var urlUpload = 'http://gerencia.datum-position.com/api/checklist/subirfotochecklist?'+'id_checklist='+clInfo.id_checklist+'&id_empresa='+route.params.user.userCompanyId;
-      // console.log(urlUpload);
-      // await fetch(urlUpload, {
-      //   method: 'POST',
-      //   body: image,
-      //   header: {
-      //     'content-type': 'multipart/form-data; boundary=<calculated when request is sent>',
-      //     'Authorization': 'Bearer ' + route.params.userToken
-      //   },
-      // }).then(res => res.json())
-      //   .then(resData => {
-      //     console.log(resData);
-
-
-      //   })
-      //   .catch(e => {
-      //     console.log(e.message);
-      //     console.log(e);
-      //     alert("Error comunicandose");
-      //   });
-      //console.log("submit");
-      //console.log(values.novedadesCalificadas.length);
-      //console.log(values.novedadesCalificadas);
-      const info = new FormData();
-      var bodyWS = {
-        "id_checklist": clInfo.id_checklist,
-        "data": {
-          "novedadesCalificadas": values.novedadesCalificadas,
-
-        },
-      };
-      console.log(route.params.userCompanyId);
-      console.log(bodyWS);
-      // const image = new FormData();
+      const image = new FormData();
       let filename = values.urlImage.split('/').pop();
       //let filename = 'imagenChecklist';
       let match = /\.(\w+)$/.exec(filename);
       let type = match ? `image/${match[1]}` : `image`;
-      info.append('data',bodyWS);
-      info.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
-      var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
-      console.log(info);  
-      await fetch(urlCal, {
+      
+      image.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
+      console.log(image);
+      var urlUpload = 'http://gerencia.datum-position.com/api/checklist/subirfotochecklist?'+'id_checklist='+clInfo.id_checklist+'&id_empresa='+route.params.user.userCompanyId;
+      console.log(urlUpload);
+      await fetch(urlUpload, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+        body: image,
+        header: {
+          'content-type': 'application/json',
           'Authorization': 'Bearer ' + route.params.userToken
         },
-        //body: JSON.stringify(bodyWS)
-        body: [info]
       }).then(res => res.json())
         .then(resData => {
           console.log(resData);
-          if (resData.status === "success") {
-            var prueba = resData.nombre_checklist + "\n\n" +
-              resData.creador_checklist + "\n" +
-              "Vehiculo: " + resData.vehiculo + "\n" +
-              "Estado: " + resData.estado_checklist + "\n" +
-              "Aprobado:" + resData.procentaje_aprobado + "\n" +
-              "Rechazado:" + resData.procentaje_rechazado + "\n" +
-              "Critico:" + resData.procentaje_rechazado_critico + "\n" +
-              "TOTAL:" + resData.total;
-            alert(prueba);
-            console.log("///////////////////////////////////////////////////////")
-            //console.log(resData.imagen);
-            navigation.navigate('Home');
 
-
-          } else {
-            alert("Error en la calificacion de Checklist, verifique el formulario");
-          }
 
         })
         .catch(e => {
           console.log(e.message);
-          alert("Error comunicandose con Datum Gerencia para crear el checklist");
+          console.log(e);
+          alert("Error comunicandose");
         });
+      //console.log("submit");
+      //console.log(values.novedadesCalificadas.length);
+      //console.log(values.novedadesCalificadas);
+
+      // var bodyWS = {
+      //   "id_checklist": clInfo.id_checklist,
+      //   "data": {
+      //     "novedadesCalificadas": values.novedadesCalificadas,
+
+      //   },
+      // };
+      // console.log(route.params.userCompanyId);
+      // console.log(bodyWS);
+      // var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
+      // await fetch(urlCal, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': 'Bearer ' + route.params.userToken
+      //   },
+      //   body: JSON.stringify(bodyWS)
+      // }).then(res => res.json())
+      //   .then(resData => {
+      //     console.log(resData);
+      //     if (resData.status === "success") {
+      //       var prueba = resData.nombre_checklist + "\n\n" +
+      //         resData.creador_checklist + "\n" +
+      //         "Vehiculo: " + resData.vehiculo + "\n" +
+      //         "Estado: " + resData.estado_checklist + "\n" +
+      //         "Aprobado:" + resData.procentaje_aprobado + "\n" +
+      //         "Rechazado:" + resData.procentaje_rechazado + "\n" +
+      //         "Critico:" + resData.procentaje_rechazado_critico + "\n" +
+      //         "TOTAL:" + resData.total;
+      //       alert(prueba);
+      //       console.log("///////////////////////////////////////////////////////")
+      //       //console.log(resData.imagen);
+      //       navigation.navigate('Home');
+
+
+      //     } else {
+      //       alert("Error en la calificacion de Checklist, verifique el formulario");
+      //     }
+
+      //   })
+      //   .catch(e => {
+      //     console.log(e.message);
+      //     alert("Error comunicandose con Datum Gerencia para crear el checklist");
+      //   });
 
 
     },

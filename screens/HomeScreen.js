@@ -50,7 +50,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       user_id: 18,
     });
 
-    var url = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
 
     await fetch(url, {
       method: 'GET',
@@ -87,8 +87,8 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       user_id: 18,
     });
 
-    var urlFuel = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/createcombustible?' + parameters.toString();
-    var urlVehicle = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    var urlFuel = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/createcombustible?' + parameters.toString();
+    var urlVehicle = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
 
     var fuelData;
     var vehicleData;
@@ -115,7 +115,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
         .then(resData =>{
           if (resData.status === "success") {
             vehicleData = resData.vehiculos;
-            return fetch('http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/pais/pais-list', {
+            return fetch('http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/pais/pais-list', {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',

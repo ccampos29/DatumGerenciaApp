@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { StyleSheet, AsyncStorage, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, AsyncStorage, TouchableOpacity, Image, Platform } from 'react-native';
 //import { Icon } from 'react-native-elements'
 //import { createStackNavigator } from '@react-navigation/stack';
 import { useFormik } from 'formik';
-import { Button, Textarea, DatePicker, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
+import { Button, Textarea, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
 //import {View, Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Switch } from 'native-base';
 import { AuthContext } from '../context/AuthContext';
 import * as ImagePicker from 'expo-image-picker';
-import { View } from 'native-base'
+import { View } from 'native-base';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 export default function CreateFuelScreen({ navigation, route }) {
   // console.log(route.params.fuelData);
   //console.log(route.params.countryData);
@@ -22,7 +24,7 @@ export default function CreateFuelScreen({ navigation, route }) {
   const { values, isSubmitting, setFieldValue, handleSubmit } = useFormik({
     initialValues:
     {
-      date: calculateDate(), //necesarios para el diligenciamiento de CL
+      date: calculateDate(new Date()), //necesarios para el diligenciamiento de CL
       time: new Date().toLocaleTimeString(),
       full: '',
       cost: '',
@@ -33,6 +35,7 @@ export default function CreateFuelScreen({ navigation, route }) {
       fuelType: '',
       chargeTo: route.params.userToken.userId,
       associatedGroup: '',
+      userMeasurement: '0',
       measurement: '',
       costsCenter: '',
       country: '',
@@ -61,8 +64,8 @@ export default function CreateFuelScreen({ navigation, route }) {
                       "tipo_combustible_id":values.fuelType,
                       "usuario_id":values.chargeTo,
                       "grupo_vehiculo_id":values.associatedGroup,
-                      "medicion_actual":values.measurement,
-                      "medicion_compare":values.measurement,
+                      "medicion_actual":values.userMeasurement, //el que digita el usuario
+                      "medicion_compare":values.measurement, //el del webservice
                       "centro_costo_id":values.costsCenter,
                       "pais_id":values.country,
                       "departamento_id":values.department,
@@ -79,7 +82,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         id_user: route.params.userToken.userId,
       });
 
-      var urlStore = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/storecombustible?'+parameters.toString();
+      var urlStore = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/storecombustible?'+parameters.toString();
       fetch(urlStore, {
             method: 'POST',
             headers: {
@@ -116,7 +119,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         idVehiculo: value,
       });
     
-      var url = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/consultamedicion?' + parametros.toString();
+      var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/consultamedicion?' + parametros.toString();
     
       await fetch(url, {
             method: 'GET',
@@ -146,7 +149,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         id_pais: value,
       });
     
-      var url = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/getdepartamentos?' + parametros.toString();
+      var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/getdepartamentos?' + parametros.toString();
     
       await fetch(url, {
             method: 'GET',
@@ -175,7 +178,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         id_departamento: value,
       });
     
-      var url = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/getmunicipios?' + parametros.toString();
+      var url = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/combustible/getmunicipios?' + parametros.toString();
     
       await fetch(url, {
             method: 'GET',
@@ -198,6 +201,9 @@ export default function CreateFuelScreen({ navigation, route }) {
 
   //setSelectedImage({ localUri: './../assets/add3.png' });
   let [selectedImage, setSelectedImage] = React.useState(null);
+  let [selectedDate, setSelectedDate] = React.useState(new Date(values.date));
+  const [mode, setMode] = React.useState('date');
+  const [show, setShow] = React.useState(false);
 
   let openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -235,6 +241,32 @@ export default function CreateFuelScreen({ navigation, route }) {
 
   };
 
+  const seleccionarFechaHora = (event, selecDate) => {
+    const currentDate = selecDate || selectedDate;
+    setShow(Platform.OS === 'ios');
+    setSelectedDate(currentDate);
+    if(mode==='date'){
+      setFieldValue('date', calculateDate(currentDate));
+    }else{
+      if(mode==='time'){
+        setFieldValue('time', currentDate.toLocaleTimeString());
+      }
+    }
+  };
+
+  const showMode = currentMode => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+
 return (
   <Container>
     <Content>
@@ -243,13 +275,34 @@ return (
 
           <Item stackedLabel style={styles.Item}>
             <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="calendar" /> <Text >  Fecha del tanqueo *</Text></Label>
-            <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.date} />
+            <TouchableOpacity onPress={showDatepicker}>
+              <View style={{ height:70, width:375 }}>
+                <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.date} />  
+              </View>
+            </TouchableOpacity>
           </Item>
 
           <Item stackedLabel style={styles.Item}>
             <Label> <Icon style={styles.LabelIcon} name="ios-clock" /> <Text >  Hora del tanqueo *</Text></Label>
-            <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.time} />
+            <TouchableOpacity onPress={showTimepicker}>
+              <View style={{ height:70, width:375 }}>
+                <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.time} />
+              </View>
+            </TouchableOpacity>
           </Item>
+
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              timeZoneOffsetInMinutes={0}
+              value={selectedDate}
+              mode={mode}
+              is24Hour={true}
+              display="default"
+              maximumDate={new Date()}
+              onChange={seleccionarFechaHora}
+            />
+          )}
 
           <Item stackedLabel style={styles.Item}>
             <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="gas-pump" /> <Text >  Tanqueo Full *</Text></Label>
@@ -362,9 +415,14 @@ return (
                 })}
             </Picker>
           </Item>
-
+          
           <Item stackedLabel style={styles.Item}>
             <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="plus" /> <Text >  Medición *</Text></Label>
+            <Input style={styles.Input} editable={true} selectTextOnFocus={false} value={values.userMeasurement} onChangeText={text => setFieldValue('userMeasurement', text)} />
+          </Item>
+
+          <Item stackedLabel style={styles.Item}>
+            <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="plus" /> <Text >  Medición Web Service *</Text></Label>
             <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={values.measurement} onChangeText={text => setFieldValue('measurement', text)} />
           </Item>
 
@@ -505,8 +563,8 @@ function imageView(option) {
     </View>)
   }
 }
-function calculateDate() {
-  var today = new Date();
+function calculateDate(sentDate) {
+  var today = sentDate;
   let day = today.getDate();
   let month = today.getMonth() + 1;
   let year = today.getFullYear();
@@ -527,7 +585,8 @@ const styles = StyleSheet.create({
     margin: 20
   },
   Item: {
-    padding: 10
+    padding: 10,
+    marginBottom:8,
   },
   Input: {
     borderWidth: 1,
@@ -535,6 +594,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     marginRight: 3,
     marginTop: 8,
+    marginBottom: 8,
     backgroundColor: '#E7E7E7'
 
   },

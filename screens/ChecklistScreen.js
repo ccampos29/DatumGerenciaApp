@@ -45,7 +45,7 @@ export default function ChecklistScreen({ navigation, route }) {
                     }
         };
 
-      var urlCal = 'http://192.168.1.57:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificarchecklist';
+      var urlCal = 'http://192.168.1.55:80/datum_gerencia-master/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificarchecklist';
       await fetch(urlCal, {
             method: 'POST',
             headers: {

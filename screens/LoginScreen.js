@@ -13,62 +13,68 @@ import TextInput from "react-native-textinput-with-icons";
 import Card from "./UI/Card";
 import { AuthContext } from './../context/AuthContext';
 
+import { FancyAlert } from 'react-native-expo-fancy-alerts';
+
 
 export default function LoginScreen() {
-  
+
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
   const { signIn } = React.useContext(AuthContext);
 
 
+
   return (
     //<KeyboardAvoidingView behavior="padding" style={styles.screen} enabled>
-      <ImageBackground
-        source={require("./../assets/background.jpg")}
-        style={styles.background}
-      >
-        <Card style={styles.authHeader}>
-          <Text style={styles.textHeader}>INICIAR SESIÓN</Text>
-        </Card>
-        <Card style={styles.authContainer}>
-          <ScrollView>
-            <TextInput
-              label="Usuario"
-              leftIcon="envelope"
-              leftIconType="awesome"
-              labelActiveColor="#fed501"
-              underlineActiveColor="#fed501"
-              autoCapitalize="none"
+    <ImageBackground
+      source={require("./../assets/background.jpg")}
+      style={styles.background}
+    >
+      <Card style={styles.authHeader}>
+        <Text style={styles.textHeader}>INICIAR SESIÓN</Text>
+      </Card>
+      <Card style={styles.authContainer}>
+        <ScrollView>
+          <TextInput
+            label="Usuario"
+            leftIcon="envelope"
+            leftIconType="awesome"
+            labelActiveColor="#fed501"
+            underlineActiveColor="#fed501"
+            autoCapitalize="none"
 
-              value={email}
-              onChangeText={setEmail}
-            />
-            <TextInput
-              label="Contraseña"
-              leftIcon="lock"
-              leftIconType="awesome"
-              labelActiveColor="#fed501"
-              underlineActiveColor="#fed501"
-              secureTextEntry={true}
-              value={password}
-              onChangeText={setPassword}
-            />
-            <View style={{ alignItems: "center", marginTop:20 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#fed501",
-                  borderRadius: 6,
-                  width: 100
-                }}
-                onPress={() => signIn({ email:email, password:password })}
-              >
-                <Text style={styles.textButton}>Ingresar</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </Card>
-      </ImageBackground>
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            label="Contraseña"
+            leftIcon="lock"
+            leftIconType="awesome"
+            labelActiveColor="#fed501"
+            underlineActiveColor="#fed501"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <View style={{ alignItems: "center", marginTop: 20 }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fed501",
+                borderRadius: 6,
+                width: 100
+              }}
+              onPress={() => signIn({ email: email, password: password })}
+              //onPress={toggleAlert}
+            >
+              <Text style={styles.textButton}>Ingresar</Text>
+            </TouchableOpacity>
+            
+          </View>
+        </ScrollView>
+      </Card>
+
+    </ImageBackground>
     //</KeyboardAvoidingView>
   );
 }

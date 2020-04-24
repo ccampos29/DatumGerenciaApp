@@ -48,11 +48,11 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
     spinnerOn();
 
     var parametros = new URLSearchParams({
-      // user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
-      user_id: 18,
+      user_id: route.params.userToken.userId, //ESTA DEBERIA SER LA OPCION VERDADERA
+      //user_id: 18,
     });
 
-    var url = 'http://192.168.100.93/php/datum_gerencia-master/frontend/web/index.php/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    var url = 'http://gerencia.datum-position.com/api/checklist/getvehiclebyuser?' + parametros.toString();
 
     await fetch(url, {
       method: 'GET',

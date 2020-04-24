@@ -47,7 +47,7 @@ function Menu(props) {
       </View>
       <DrawerMenu
         iconName="home"
-        titleName="Home"
+        titleName="Inicio"
         navigation={() => props.navigation.dispatch(
                             CommonActions.reset({
                               index: 0,
@@ -62,12 +62,12 @@ function Menu(props) {
       />
       <DrawerMenu
         iconName="info-circle"
-        titleName="About"
+        titleName="Acerca de"
         navigation={() => props.navigation.navigate("About")}
       />
       <DrawerMenu
         iconName="arrow-left"
-        titleName="Logout"
+        titleName="Cerrar sesión"
         navigation={() => {
           signOut();
         }}

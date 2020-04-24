@@ -31,7 +31,8 @@ export default function ChecklistScreen({ navigation, route }) {
             "valor_texto_calificacion": '',
             "vehiculo_id": clInfo.id_vehiculo,
             "tipo_checklist_id": clInfo.id_tipo_checklist,
-            "checklis_id": clInfo.id_checklist
+            "checklis_id": clInfo.id_checklist,
+            "empres_id" : route.params.user.userCompanyId,
           };
         })
       }
@@ -40,78 +41,92 @@ export default function ChecklistScreen({ navigation, route }) {
     },
     onSubmit: async (values) => {
 
-      const image = new FormData();
-      let filename = values.urlImage.split('/').pop();
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
+      // const image = new FormData();
+      // let filename = values.urlImage.split('/').pop();
+      // //let filename = 'imagenChecklist';
+      // let match = /\.(\w+)$/.exec(filename);
+      // let type = match ? `image/${match[1]}` : `image`;
       
-      image.append('photo', { uri: values.urlImage, name: filename, type });
-      console.log(image);
-      var urlUpload = 'http://192.168.100.93/php/datum_gerencia-master/frontend/web/index.php/Api/checklist/subirfotochecklist';
-      await fetch(urlUpload, {
-        method: 'POST',
-        body: image,
-        header: {
-          'content-type': 'application/json',
-        },
-      }).then(res => res.json())
-        .then(resData => {
-          console.log(resData);
-
-
-        })
-        .catch(e => {
-          console.log(e.message);
-          console.log(e);
-          alert("Error comunicandose");
-        });
-      //console.log("submit");
-      //console.log(values.novedadesCalificadas.length);
-      //console.log(values.novedadesCalificadas);
-
-      // var bodyWS = {
-      //   "id_checklist": clInfo.id_checklist,
-      //   "data": {
-      //     "novedadesCalificadas": values.novedadesCalificadas,
-
-      //   },
-      // };
-      // console.log(bodyWS);
-      // var urlCal = 'http://192.168.100.93/php/datum_gerencia-master/frontend/web/index.php/Api/checklist/calificarchecklist';
-      // await fetch(urlCal, {
+      // image.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
+      // console.log(image);
+      // console.log(route.params.userToken);
+      // var urlUpload = 'http://gerencia.datum-position.com/api/checklist/subirfotochecklist?'+'id_checklist='+clInfo.id_checklist+'&id_empresa='+route.params.user.userCompanyId;
+      // console.log(urlUpload);
+      // await fetch(urlUpload, {
       //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
+      //   body: image,
+      //   header: {
+      //     'content-type': 'multipart/form-data; boundary=<calculated when request is sent>',
       //     'Authorization': 'Bearer ' + route.params.userToken
       //   },
-      //   body: JSON.stringify(bodyWS)
       // }).then(res => res.json())
       //   .then(resData => {
-      //     //console.log(resData);
-      //     if (resData.status === "success") {
-      //       var prueba = resData.nombre_checklist + "\n\n" +
-      //         resData.creador_checklist + "\n" +
-      //         "Vehiculo: " + resData.vehiculo + "\n" +
-      //         "Estado: " + resData.estado_checklist + "\n" +
-      //         "Aprobado:" + resData.procentaje_aprobado + "\n" +
-      //         "Rechazado:" + resData.procentaje_rechazado + "\n" +
-      //         "Critico:" + resData.procentaje_rechazado_critico + "\n" +
-      //         "TOTAL:" + resData.total;
-      //       alert(prueba);
-      //       console.log("///////////////////////////////////////////////////////")
-      //       console.log(resData.imagen);
-      //       navigation.navigate('Home');
+      //     console.log(resData);
 
-
-      //     } else {
-      //       alert("Error en la calificacion de Checklist, verifique el formulario");
-      //     }
 
       //   })
       //   .catch(e => {
       //     console.log(e.message);
-      //     alert("Error comunicandose con Datum Gerencia para crear el checklist");
+      //     console.log(e);
+      //     alert("Error comunicandose");
       //   });
+      //console.log("submit");
+      //console.log(values.novedadesCalificadas.length);
+      //console.log(values.novedadesCalificadas);
+      const info = new FormData();
+      var bodyWS = {
+        "id_checklist": clInfo.id_checklist,
+        "data": {
+          "novedadesCalificadas": values.novedadesCalificadas,
+
+        },
+      };
+      console.log(route.params.userCompanyId);
+      console.log(bodyWS);
+      // const image = new FormData();
+      let filename = values.urlImage.split('/').pop();
+      //let filename = 'imagenChecklist';
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+      info.append('data',bodyWS);
+      info.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
+      var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
+      console.log(info);  
+      await fetch(urlCal, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + route.params.userToken
+        },
+        //body: JSON.stringify(bodyWS)
+        body: [info]
+      }).then(res => res.json())
+        .then(resData => {
+          console.log(resData);
+          if (resData.status === "success") {
+            var prueba = resData.nombre_checklist + "\n\n" +
+              resData.creador_checklist + "\n" +
+              "Vehiculo: " + resData.vehiculo + "\n" +
+              "Estado: " + resData.estado_checklist + "\n" +
+              "Aprobado:" + resData.procentaje_aprobado + "\n" +
+              "Rechazado:" + resData.procentaje_rechazado + "\n" +
+              "Critico:" + resData.procentaje_rechazado_critico + "\n" +
+              "TOTAL:" + resData.total;
+            alert(prueba);
+            console.log("///////////////////////////////////////////////////////")
+            //console.log(resData.imagen);
+            navigation.navigate('Home');
+
+
+          } else {
+            alert("Error en la calificacion de Checklist, verifique el formulario");
+          }
+
+        })
+        .catch(e => {
+          console.log(e.message);
+          alert("Error comunicandose con Datum Gerencia para crear el checklist");
+        });
 
 
     },
@@ -125,7 +140,7 @@ export default function ChecklistScreen({ navigation, route }) {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('Permission to access camera roll is required!');
+      alert('El permiso de acceso a cámara y galeria son requeridos!');
       return;
     }
 
@@ -144,7 +159,7 @@ export default function ChecklistScreen({ navigation, route }) {
     let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('Permission to access camera roll is required!');
+      alert('El permiso de acceso a cámara y galeria son requeridos!');
       return;
     }
 
@@ -170,8 +185,8 @@ export default function ChecklistScreen({ navigation, route }) {
 
           {clGroup.map((grupo) => {
             return (
-              <Card style={{ marginBottom: 30 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 30, margin: 10 }}>{grupo.grupo.nombre}</Text>
+              <Card style={{ marginBottom: 20 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 25, margin: 10, marginBottom:5 }}>{grupo.grupo.nombre}</Text>
 
                 {grupo.grupo.novedades.map((novedad, index) => {
 
@@ -237,8 +252,8 @@ export default function ChecklistScreen({ navigation, route }) {
                             onValueChange={handleChange('novedadesCalificadas[' + cont + '].valor_texto_calificacion')}
                           >
                             <Picker.Item key="-1" label="Seleccione una opción" value="-1" />
-                            <Picker.Item key="9" label="Si" value="9" />
-                            <Picker.Item key="10" label="No" value="10" />
+                            <Picker.Item key="1" label="Si" value="1" />
+                            <Picker.Item key="2" label="No" value="2" />
                           </Picker>
                         ))
                       }
@@ -331,7 +346,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: '#E7E7E7',
     margin: 3,
-    width: 310,
+    width: 280,
     height: 40
 
   },

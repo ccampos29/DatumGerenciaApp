@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, View, StyleSheet, TouchableOpacity, AsyncStorage, Alert } from "react-native";
+import { Button, View, StyleSheet, TouchableOpacity, AsyncStorage, Text } from "react-native";
 import MyDrawer from "./navigation/DrawerNavigation";
 import LoginScreen from "./screens/LoginScreen";
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,15 +7,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { AppLoading } from 'expo';
 import { navigationRef } from "./screens/RootNavigation";
 import Spinner from 'react-native-loading-spinner-overlay';
-import {AuthContext} from './context/AuthContext';
+import { AuthContext } from './context/AuthContext';
 import * as Font from 'expo-font';
+import Alert from "./screens/UI/Alert";
+import { Ionicons } from '@expo/vector-icons';
+import { FancyAlert } from 'react-native-expo-fancy-alerts';
 
 
 
 const Stack = createStackNavigator();
 
 export default function App({ navigation }) {
-
 
   var loadFonts = async () => {
     await Font.loadAsync({
@@ -25,40 +27,41 @@ export default function App({ navigation }) {
   }
 
   loadFonts();
-
+  var alertVisible = false;
+  var mensajeError = 'prueba';
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
         case 'SPINNER_ON':
           return {
             ...prevState,
-            spinner:true,
+            spinner: true,
           };
         case 'SPINNER_OFF':
-        return {
-          ...prevState,
-          spinner:false,
-        };
+          return {
+            ...prevState,
+            spinner: false,
+          };
         case 'RESTORE_TOKEN':
           return {
             ...prevState,
             userToken: action.token,
             isLoading: false,
-            spinner:false,
+            spinner: false,
           };
         case 'SIGN_IN':
           return {
             ...prevState,
             isSignout: false,
             userToken: action.token,
-            spinner:false,
+            spinner: false,
           };
         case 'SIGN_OUT':
           return {
             ...prevState,
             isSignout: true,
             userToken: null,
-            spinner:false,
+            spinner: false,
           };
       }
     },
@@ -98,7 +101,7 @@ export default function App({ navigation }) {
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         dispatch({ type: 'SPINNER_ON' });
-        await fetch('http://192.168.100.93/php/datum_gerencia-master/frontend/web/index.php/Api/user/authenticate', {
+        await fetch('http://gerencia.datum-position.com/api/user/authenticate ', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -107,8 +110,9 @@ export default function App({ navigation }) {
         }).then(res => res.json())
           .then(resData => {
             var userToken = {};
-
-            if(resData.token!=null){
+            console.log(resData);
+            if (resData.token != null) {
+              //console.log(resData);
               userToken.token = resData.token;
               userToken.userId = resData.user.id;
               userToken.userCC = resData.user.id_number;
@@ -116,25 +120,30 @@ export default function App({ navigation }) {
               userToken.userEmail = resData.user.email;
               userToken.userTypeId = resData.user.tipo_usuario_id;
               userToken.userCompanyId = resData.user.empresa_id;
-              
+              console.log(userToken);
               var token2Store = JSON.stringify(userToken);
               AsyncStorage.setItem('userToken', token2Store);
               dispatch({ type: 'SIGN_IN', token: token2Store });
-            }else{
+            } else {
               dispatch({ type: 'SIGN_IN', token: null });
               //alert("Mal usuario");
-              Alert.alert(
-                'Error',
-                'Usuario y/o contraseña incorrectos, por favor verifique',
-                [
-                  {
-                    text: 'Cerrar',
-                    style: 'cancel',
-                  },
-                ],
-                {cancelable: false},
-              );
-             
+              console.log(resData);
+              mostrarError(true, 'mensaje');
+
+              // Alert.alert(
+              //   'Error',
+              //   'Usuario y/o contraseña incorrectos, por favor verifique',
+              //   [
+              //     {
+              //       text: 'Cerrar',
+              //       style: 'cancel',
+              //     },
+              //   ],
+              //   {cancelable: false},
+              // );
+
+              console.log("///////////////////////////");
+
             }
 
             // if(data.email === resData.login){
@@ -144,9 +153,11 @@ export default function App({ navigation }) {
             //   dispatch({ type: 'SIGN_IN', token: null });
             //   alert("Mal usuario");
             // }
-          }).catch(e=>{
+          }).catch(e => {
             console.log("Hay un error!, " + e);
             dispatch({ type: 'SPINNER_OFF' });
+            alertVisible = true;
+            mensajeError = 'funcionaaa';
           });
 
       },
@@ -157,12 +168,12 @@ export default function App({ navigation }) {
         try {
           //limpiar toda
           await AsyncStorage.removeItem('userToken');
-        } catch(e) {
+        } catch (e) {
           console.log("error removiendo el token");
         }
-        
-        dispatch({ type: 'SIGN_OUT', token:null });
-      
+
+        dispatch({ type: 'SIGN_OUT', token: null });
+
       },
       signUp: async data => {
         // In a production app, we need to send user data to server and get a token
@@ -173,49 +184,75 @@ export default function App({ navigation }) {
         dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
       },
       spinnerOn: () => {
-        dispatch({ type: 'SPINNER_ON'});
+        dispatch({ type: 'SPINNER_ON' });
       },
       spinnerOff: () => {
-        dispatch({ type: 'SPINNER_OFF'});
+        dispatch({ type: 'SPINNER_OFF' });
       },
     }),
     []
   );
 
-  const LoginComponent = () => (<LoginScreen /> );
+  const LoginComponent = () => (<LoginScreen />);
 
-  const DrawerComponent = () => (<MyDrawer properties={{ "userToken":state.userToken }}/> );
+  // const AlertaError = () => (<Alert visible={alertVisible}><Text style={{ textAlign: 'center' }}>{mensajeError}</Text></Alert>);
+  const DrawerComponent = () => (<MyDrawer properties={{ "userToken": state.userToken }} />);
+
 
   return (
     <AuthContext.Provider value={authContext}>
       {state.isLoading ? (
-        <AppLoading/>
-      ):(
-        <NavigationContainer ref={navigationRef}>
-          <Spinner
-            visible={state.spinner}
-            textContent={'Cargando...'}
-            textStyle={{ color: '#FFF' }}
-          />
-          <Stack.Navigator headerMode='none'>
-            {state.userToken == null ? (
-              // No token found, user isn't signed in
-              <Stack.Screen
-                name="Login"
-                component={LoginComponent}
-                options={{
-                // When logging out, a pop animation feels intuitive
-                  animationTypeForReplace: state.isSignout ? 'pop' : 'push'
-                }}
-              />
-            ) : (
-              // User is signed in
-              <Stack.Screen name="Drawer" component={DrawerComponent} />
-            )}
-          </Stack.Navigator>
-          
-        </NavigationContainer>
-        )}
-    </AuthContext.Provider>
+        <AppLoading />
+
+      ) : (
+          <NavigationContainer ref={navigationRef}>
+            <Spinner
+              visible={state.spinner}
+              textContent={'Cargando...'}
+              textStyle={{ color: '#FFF' }}
+            />
+            <Stack.Navigator headerMode='none'>
+              {state.userToken == null ? (
+                // No token found, user isn't signed in
+                <Stack.Screen
+                  name="Login"
+                  component={LoginComponent}
+                  options={{
+                    // When logging out, a pop animation feels intuitive
+                    animationTypeForReplace: state.isSignout ? 'pop' : 'push'
+                  }}
+
+                />
+
+              ) : (
+                  // User is signed in
+                  <Stack.Screen name="Drawer" component={DrawerComponent} />
+                )}
+
+              {/* {alertVisible == true ? (
+                // No token found, user isn't signed in
+                <Stack.Screen
+                  name="Alert"
+                  component={AlertaError}
+                  options={{
+                    // When logging out, a pop animation feels intuitive
+                    animationTypeForReplace: state.isSignout ? 'pop' : 'push'
+                  }}
+
+                />
+
+              ) : (console.log('No hay errores'))} */}
+            </Stack.Navigator>
+
+          </NavigationContainer>
+        )
+      }
+    </AuthContext.Provider >
   );
+
+
+  function mostrarError(visible, mensaje) {
+    console.log('holaa');
+    return (<Alert visible={visible}><Text style={{ textAlign: 'center' }}>{mensaje}</Text></Alert>)
+  }
 }

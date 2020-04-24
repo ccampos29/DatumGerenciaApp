@@ -34,7 +34,7 @@ export default function CreateScreen({ navigation, route }) {
 
     },
     onSubmit: async (values) => {
-      //console.log("Hola mundo se realizó un submit ");
+      ////("Hola mundo se realizó un submit ");
       //alert(values.plate);
       // Realizar validacion
       // O validar en tiempo real, ver tutorial https://www.youtube.com/watch?v=0vx0NS-ok04
@@ -54,7 +54,7 @@ export default function CreateScreen({ navigation, route }) {
         }
       };
 
-      //console.log(bodyWS);
+      //////console.log(bodyWS);
 
       var urlCreateCL = 'http://gerencia.datum-position.com/api/checklist/create';
       var urlGetCalif = 'http://gerencia.datum-position.com/api/checklist/calificacioneschecklist';
@@ -68,7 +68,7 @@ export default function CreateScreen({ navigation, route }) {
         body: JSON.stringify(bodyWS)
       }).then(res => res.json())
         .then(resData => {
-          console.log(resData);
+          ////console.log(resData);
           if (resData.status === "success") {
             // alert(resData.message);
             // navigation.navigate('ChecklistScreen');
@@ -88,7 +88,7 @@ export default function CreateScreen({ navigation, route }) {
         })
         .then(res => res.json())
         .then(resData => {
-          console.log(resData);
+          ////console.log(resData);
           if (resData != null) {
             navigation.navigate("ChecklistScreen", { userToken: route.params.userToken.token, checklistGroup: resData, checklistInfo: checklistInfo, user:route.params.userToken });
           }
@@ -111,7 +111,7 @@ export default function CreateScreen({ navigation, route }) {
       });
 
       var url = 'http://gerencia.datum-position.com/api/checklist/consultamedicion?' + parametros.toString();
-      console.log(url);
+      //console.log(url);
       await fetch(url, {
         method: 'GET',
         headers: {
@@ -120,7 +120,7 @@ export default function CreateScreen({ navigation, route }) {
         }
       }).then(res => res.json())
         .then(resData => {
-          console.log(resData);
+          //console.log(resData);
           if (resData.status === "success") {
             setFieldValue('currentMeasurement', resData.data.valor);
           } else {
@@ -136,7 +136,7 @@ export default function CreateScreen({ navigation, route }) {
       });
       
       var url = 'http://gerencia.datum-position.com/api/checklist/tiposchecklist?' + parametrosCL.toString();
-      console.log(url);
+      //console.log(url);
       await fetch(url, {
         method: 'GET',
         headers: {
@@ -145,7 +145,7 @@ export default function CreateScreen({ navigation, route }) {
         }
       }).then(res => res.json())
         .then(resData => {
-          console.log(resData);
+          //console.log(resData);
           if (resData.status === "success") {
             setFieldValue('checklistTypes', resData.tipos_checklist);
             setFieldValue('typeCheckListEnable', true);
@@ -162,7 +162,7 @@ export default function CreateScreen({ navigation, route }) {
       });
 
       var url = 'http://gerencia.datum-position.com/api/checklist/getuserbyvehicle?' + parametrosCL.toString();
-      console.log(url);
+      //console.log(url);
       await fetch(url, {
         method: 'GET',
         headers: {
@@ -171,7 +171,7 @@ export default function CreateScreen({ navigation, route }) {
         }
       }).then(res => res.json())
         .then(resData => {
-          console.log(resData);
+          //console.log(resData);
           if (resData.length>0) {
             setFieldValue('drivers', resData);
             setFieldValue('driverEnable', true);
@@ -203,7 +203,7 @@ export default function CreateScreen({ navigation, route }) {
         body: JSON.stringify({ "id_tipo_checklist": checklistTypeId, "fecha_actual": currentDate, "odometro_actual": currentMeasurement }),
       }).then(res => res.json())
         .then(resData => {
-          //console.log(resData);
+          ////console.log(resData);
           if (typeof resData.fecha_siguiente !== 'undefined') {
             setFieldValue('dateNextCheckList', resData.fecha_siguiente);
             if (typeof resData.odometro_siguiente !== 'undefined')
@@ -214,7 +214,7 @@ export default function CreateScreen({ navigation, route }) {
             alert("Error obteniendo la informacion despues de seleccionar checklist");
           }
         }).catch(e => {
-          //console.log(e);
+          ////console.log(e);
           alert("Error comunicandose con Datum Gerencia para odometro");
         });
 

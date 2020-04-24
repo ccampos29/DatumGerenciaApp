@@ -106,30 +106,62 @@ export default function ChecklistScreen({ navigation, route }) {
       }).then(res => res.json())
         .then(resData => {
           console.log(resData);
-          if (resData.status === "success") {
-            var prueba = resData.nombre_checklist + "\n\n" +
-              resData.creador_checklist + "\n" +
-              "Vehiculo: " + resData.vehiculo + "\n" +
-              "Estado: " + resData.estado_checklist + "\n" +
-              "Aprobado:" + resData.procentaje_aprobado + "\n" +
-              "Rechazado:" + resData.procentaje_rechazado + "\n" +
-              "Critico:" + resData.procentaje_rechazado_critico + "\n" +
-              "TOTAL:" + resData.total;
-            alert(prueba);
-            console.log("///////////////////////////////////////////////////////")
-            //console.log(resData.imagen);
-            navigation.navigate('Home');
 
-
-          } else {
-            alert("Error en la calificacion de Checklist, verifique el formulario");
-          }
 
         })
         .catch(e => {
           console.log(e.message);
-          alert("Error comunicandose con Datum Gerencia para crear el checklist");
+          console.log(e);
+          alert("Error comunicandose");
         });
+      //console.log("submit");
+      //console.log(values.novedadesCalificadas.length);
+      //console.log(values.novedadesCalificadas);
+
+      // var bodyWS = {
+      //   "id_checklist": clInfo.id_checklist,
+      //   "data": {
+      //     "novedadesCalificadas": values.novedadesCalificadas,
+
+      //   },
+      // };
+      // console.log(route.params.userCompanyId);
+      // console.log(bodyWS);
+      // var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
+      // await fetch(urlCal, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': 'Bearer ' + route.params.userToken
+      //   },
+      //   body: JSON.stringify(bodyWS)
+      // }).then(res => res.json())
+      //   .then(resData => {
+      //     console.log(resData);
+      //     if (resData.status === "success") {
+      //       var prueba = resData.nombre_checklist + "\n\n" +
+      //         resData.creador_checklist + "\n" +
+      //         "Vehiculo: " + resData.vehiculo + "\n" +
+      //         "Estado: " + resData.estado_checklist + "\n" +
+      //         "Aprobado:" + resData.procentaje_aprobado + "\n" +
+      //         "Rechazado:" + resData.procentaje_rechazado + "\n" +
+      //         "Critico:" + resData.procentaje_rechazado_critico + "\n" +
+      //         "TOTAL:" + resData.total;
+      //       alert(prueba);
+      //       console.log("///////////////////////////////////////////////////////")
+      //       //console.log(resData.imagen);
+      //       navigation.navigate('Home');
+
+
+      //     } else {
+      //       alert("Error en la calificacion de Checklist, verifique el formulario");
+      //     }
+
+      //   })
+      //   .catch(e => {
+      //     console.log(e.message);
+      //     alert("Error comunicandose con Datum Gerencia para crear el checklist");
+      //   });
 
 
     },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, AsyncStorage, TouchableOpacity } from 'react-native';
+import { StyleSheet, AsyncStorage, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
 //import { Icon } from 'react-native-elements'
 //import { createStackNavigator } from '@react-navigation/stack';
 import { useFormik } from 'formik';
@@ -8,6 +8,7 @@ import { Button, Textarea, DatePicker, Form, Card, Item, Label, Picker, Input, C
 import { AuthContext } from './../context/AuthContext';
 
 import AwesomeAlert from 'react-native-awesome-alerts';
+import Alert from "./UI/Alert";
 
 export default function CreateScreen({ navigation, route }) {
 
@@ -31,6 +32,9 @@ export default function CreateScreen({ navigation, route }) {
       driverEnable: false,
       checklistTypes: new Array(),
       drivers: new Array(),
+      carga: false,
+      alert: false,
+      erroMsg: '',
 
     },
     onSubmit: async (values) => {
@@ -39,6 +43,7 @@ export default function CreateScreen({ navigation, route }) {
       // Realizar validacion
       // O validar en tiempo real, ver tutorial https://www.youtube.com/watch?v=0vx0NS-ok04
       // Falta subir el formulario para que el teclado no lo tape como en el login
+      setFieldValue('carga', true);
       var bodyWS = {
         "Checklist": {
           "empresa_id": route.params.userToken.empresa_id, // Empresa del que ingresa o del conductor que fue seleccionado?
@@ -82,6 +87,8 @@ export default function CreateScreen({ navigation, route }) {
               body: JSON.stringify({ "id_checklist": resData.id_checklist, "id_vehiculo": resData.id_vehiculo, "id_tipo_checklist": resData.id_tipo_checklist })
             });
           } else {
+            // setFieldValue('alert', true);
+            // setFieldValue('errorMsg', 'Error en la creacion de Checklist, verifique el vehiculo y el tipo de checklist');
             alert("Error en la creacion de Checklist, verifique el vehiculo y el tipo de checklist");
           }
 
@@ -90,12 +97,14 @@ export default function CreateScreen({ navigation, route }) {
         .then(resData => {
           ////console.log(resData);
           if (resData != null) {
-            navigation.navigate("ChecklistScreen", { userToken: route.params.userToken.token, checklistGroup: resData, checklistInfo: checklistInfo, user:route.params.userToken });
+            setFieldValue('carga', false);
+            navigation.navigate("ChecklistScreen", { userToken: route.params.userToken.token, checklistGroup: resData, checklistInfo: checklistInfo, user: route.params.userToken });
           }
         })
         .catch(e => {
           console.log(e);
           alert("Error comunicandose con Datum Gerencia para crear el checklist");
+          setFieldValue('carga', false);
         });
     },
 
@@ -105,7 +114,7 @@ export default function CreateScreen({ navigation, route }) {
   const seleccionarVehiculo = async (value) => {
     if (value != "-1") {
       setFieldValue('plate', value);
-
+      setFieldValue('carga', true);
       var parametros = new URLSearchParams({
         vehicle_id: value,
       });
@@ -134,7 +143,7 @@ export default function CreateScreen({ navigation, route }) {
       var parametrosCL = new URLSearchParams({
         vehicle_id: value, //CARLITOS QUE SEAN IGUALES LOS PARAMETROS NOS AYUDARIA POR ACA
       });
-      
+
       var url = 'http://gerencia.datum-position.com/api/checklist/tiposchecklist?' + parametrosCL.toString();
       //console.log(url);
       await fetch(url, {
@@ -172,10 +181,11 @@ export default function CreateScreen({ navigation, route }) {
       }).then(res => res.json())
         .then(resData => {
           //console.log(resData);
-          if (resData.length>0) {
+          if (resData.length > 0) {
             setFieldValue('drivers', resData);
             setFieldValue('driverEnable', true);
             setFieldValue('driver', '-1');
+            setFieldValue('carga', false);
           } else {
             alert("Error obteniendo los conductores que tiene el vehiculo");
           }
@@ -234,7 +244,20 @@ export default function CreateScreen({ navigation, route }) {
       <Content>
         <Form>
           <Card>
-
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={values.carga}
+            >
+              <ActivityIndicator style={styles.activityIndicator} animating={values.carga} size="large" color="#E0A729" />
+            </Modal>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={values.alert}
+            >
+              <Alert message={values.erroMsg}visible={values.alert}><Text>Hola mundo</Text></Alert>
+            </Modal>
             <Item stackedLabel style={styles.Item}>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="car" /> <Text >  Vehiculo *</Text></Label>
               <Picker
@@ -289,7 +312,7 @@ export default function CreateScreen({ navigation, route }) {
                 <Picker.Item key="-1" label="Seleccione un conductor" value="-1" />
                 {values.drivers.map((driver) => {
                   return (
-                    <Picker.Item key={driver.id_number+"-"+driver.name+" "+driver.surname} label={driver.id_number+" - "+driver.name+" "+driver.surname} value={driver.id_number+"-"+driver.name+" "+driver.surname} />
+                    <Picker.Item key={driver.id_number + "-" + driver.name + " " + driver.surname} label={driver.id_number + " - " + driver.name + " " + driver.surname} value={driver.id_number + "-" + driver.name + " " + driver.surname} />
                   )
                 })}
               </Picker>
@@ -403,8 +426,13 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     marginLeft: 130
-
-
+  },
+  activityIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80,
+    backgroundColor: 'rgba(234, 234, 234, 0.4)',
   }
 
 });

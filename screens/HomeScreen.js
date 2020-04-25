@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, ImageBackground, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, ImageBackground, Alert  } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -35,6 +35,7 @@ function Home({ navigation, route }) {
               <Text style={styles.textList}>{item.label}</Text>
             </ImageBackground>
           </TouchableOpacity>
+          
         )}
       />
     </View>

@@ -4,10 +4,7 @@ import { FancyAlert } from 'react-native-expo-fancy-alerts';
 import { Ionicons } from '@expo/vector-icons';
 
 const Alert = props => {
-    //console.log(props.visible);
-    var status = props.visible;
-    console.log('status');
-    const [visible, setVisible] = React.useState(status);
+    const [visible, setVisible] = React.useState(props.visible);
     const cambioEstado = React.useCallback(() => {
         setVisible(!visible);
       }, [visible]);
@@ -24,8 +21,8 @@ const Alert = props => {
                 style={{ backgroundColor: 'white' }}
             >
                 <View style={styles.content}>
-                    {props.children}
-                    {/* <Text style={styles.contentText}>{'mensajeError'}</Text> */}
+
+                    <Text style={styles.contentText}>{props.message}</Text>
 
                     <TouchableOpacity style={styles.btn} onPress={cambioEstado}>
                         <Text style={styles.btnText}>Aceptar</Text>

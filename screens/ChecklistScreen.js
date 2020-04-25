@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, AsyncStorage, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, AsyncStorage, TouchableOpacity, Image, ActivityIndicator, Modal } from 'react-native';
 
 import { useFormik } from 'formik';
 import { ListItem, Body, Icon, Text, Form, Item, Label, Picker, Input, Content, Container, Header, Accordion, View } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import Card from './UI/Card';
+import Alert from "./UI/Alert";
 
 
 export default function ChecklistScreen({ navigation, route }) {
@@ -22,6 +23,8 @@ export default function ChecklistScreen({ navigation, route }) {
   const { values, isSubmitting, setFieldValue, handleSubmit, handleChange } = useFormik({
     initialValues:
     {
+      carga: false,
+      alerta: false,
       novedadesCalificadas: [].concat.apply([], clGroup.map(grupo => {
         return grupo.grupo.novedades.map(novedad => {
           return {
@@ -32,7 +35,7 @@ export default function ChecklistScreen({ navigation, route }) {
             "vehiculo_id": clInfo.id_vehiculo,
             "tipo_checklist_id": clInfo.id_tipo_checklist,
             "checklis_id": clInfo.id_checklist,
-            "empres_id" : route.params.user.userCompanyId,
+            "empres_id": route.params.user.userCompanyId,
           };
         })
       }
@@ -40,39 +43,7 @@ export default function ChecklistScreen({ navigation, route }) {
       urlImage: '',
     },
     onSubmit: async (values) => {
-
-      // const image = new FormData();
-      // let filename = values.urlImage.split('/').pop();
-      // //let filename = 'imagenChecklist';
-      // let match = /\.(\w+)$/.exec(filename);
-      // let type = match ? `image/${match[1]}` : `image`;
-      
-      // image.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
-      // console.log(image);
-      // console.log(route.params.userToken);
-      // var urlUpload = 'http://gerencia.datum-position.com/api/checklist/subirfotochecklist?'+'id_checklist='+clInfo.id_checklist+'&id_empresa='+route.params.user.userCompanyId;
-      // console.log(urlUpload);
-      // await fetch(urlUpload, {
-      //   method: 'POST',
-      //   body: image,
-      //   header: {
-      //     'content-type': 'multipart/form-data; boundary=<calculated when request is sent>',
-      //     'Authorization': 'Bearer ' + route.params.userToken
-      //   },
-      // }).then(res => res.json())
-      //   .then(resData => {
-      //     console.log(resData);
-
-
-      //   })
-      //   .catch(e => {
-      //     console.log(e.message);
-      //     console.log(e);
-      //     alert("Error comunicandose");
-      //   });
-      //console.log("submit");
-      //console.log(values.novedadesCalificadas.length);
-      //console.log(values.novedadesCalificadas);
+      setFieldValue('carga', true);
       var info = new FormData();
       var bodyWS = {
         "id_checklist": clInfo.id_checklist,
@@ -81,12 +52,9 @@ export default function ChecklistScreen({ navigation, route }) {
 
         },
       };
-      // console.log(route.params.userCompanyId);
-      // console.log(bodyWS);
-      // const image = new FormData();
+
       let filename = values.urlImage.split('/').pop();
-      // console.log(filename);
-      //let filename = 'imagenChecklist';
+
       let match = /\.(\w+)$/.exec(filename);
       let type = match ? `image/${match[1]}` : `image`;
       console.log(bodyWS);
@@ -100,13 +68,29 @@ export default function ChecklistScreen({ navigation, route }) {
           Accept: "*/*",
           'Content-Type': 'multipart/form-data;',
           Authorization: 'Bearer ' + route.params.userToken,
-          'Accept-Encoding':'gzip;q=1.0, compress;q=0.5'
+          'Accept-Encoding': 'gzip;q=1.0, compress;q=0.5'
         },
         body: info
       }).then(res => res.json())
         .then(resData => {
           console.log(resData);
-
+          setFieldValue('carga', false);
+          if(resData.status==="success"){
+            var prueba = clInfo.id_checklist+' '+resData.nombre_checklist + "\n\n" +
+                    resData.creador_checklist + "\n" +
+                    "Vehiculo: " + resData.vehiculo + "\n" +
+                    "Estado: " + resData.estado_checklist + "\n" +
+                    "Aprobado:" + resData.procentaje_aprobado + "\n" +
+                    "Rechazado:" + resData.procentaje_rechazado + "\n" +
+                    "Critico:" + resData.procentaje_rechazado_critico + "\n" +
+                    "TOTAL:" + resData.total;
+            alert(prueba);
+            navigation.navigate('Home');
+            
+          }else{
+            alert("Error en la creacion de Checklist, verifique el formulario");
+          }
+          //setFieldValue('alerta', true);
 
         })
         .catch(e => {
@@ -114,55 +98,6 @@ export default function ChecklistScreen({ navigation, route }) {
           console.log(e);
           alert("Error comunicandose");
         });
-      //console.log("submit");
-      //console.log(values.novedadesCalificadas.length);
-      //console.log(values.novedadesCalificadas);
-
-      // var bodyWS = {
-      //   "id_checklist": clInfo.id_checklist,
-      //   "data": {
-      //     "novedadesCalificadas": values.novedadesCalificadas,
-
-      //   },
-      // };
-      // console.log(route.params.userCompanyId);
-      // console.log(bodyWS);
-      // var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
-      // await fetch(urlCal, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': 'Bearer ' + route.params.userToken
-      //   },
-      //   body: JSON.stringify(bodyWS)
-      // }).then(res => res.json())
-      //   .then(resData => {
-      //     console.log(resData);
-      //     if (resData.status === "success") {
-      //       var prueba = resData.nombre_checklist + "\n\n" +
-      //         resData.creador_checklist + "\n" +
-      //         "Vehiculo: " + resData.vehiculo + "\n" +
-      //         "Estado: " + resData.estado_checklist + "\n" +
-      //         "Aprobado:" + resData.procentaje_aprobado + "\n" +
-      //         "Rechazado:" + resData.procentaje_rechazado + "\n" +
-      //         "Critico:" + resData.procentaje_rechazado_critico + "\n" +
-      //         "TOTAL:" + resData.total;
-      //       alert(prueba);
-      //       console.log("///////////////////////////////////////////////////////")
-      //       //console.log(resData.imagen);
-      //       navigation.navigate('Home');
-
-
-      //     } else {
-      //       alert("Error en la calificacion de Checklist, verifique el formulario");
-      //     }
-
-      //   })
-      //   .catch(e => {
-      //     console.log(e.message);
-      //     alert("Error comunicandose con Datum Gerencia para crear el checklist");
-      //   });
-
 
     },
 
@@ -222,12 +157,26 @@ export default function ChecklistScreen({ navigation, route }) {
 
     <Container>
       <Content padder>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={values.carga}
+        >
+          <ActivityIndicator style={styles.activityIndicator} animating={values.carga} size="large" color="#E0A729" />
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={values.alerta}
+        >
+          <Alert visible={values.alerta}><Text>Hola mundo</Text></Alert>
+        </Modal>
         <Form>
 
           {clGroup.map((grupo) => {
             return (
               <Card style={{ marginBottom: 20 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 25, margin: 10, marginBottom:5 }}>{grupo.grupo.nombre}</Text>
+                <Text style={{ fontWeight: "bold", fontSize: 25, margin: 10, marginBottom: 5 }}>{grupo.grupo.nombre}</Text>
 
                 {grupo.grupo.novedades.map((novedad, index) => {
 
@@ -461,5 +410,12 @@ const styles = StyleSheet.create({
     height: 300,
     resizeMode: 'contain',
   },
+  activityIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80,
+    backgroundColor: 'rgba(234, 234, 234, 0.4)',
+  }
 
 });

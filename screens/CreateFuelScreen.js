@@ -79,8 +79,7 @@ export default function CreateFuelScreen({ navigation, route }) {
           "departamento_id": values.department,
           "municipio_id": values.city,
           "observacion": values.observation,
-          "empres_id": route.params.user.userCompanyId,
-          //"imagenCombustible": values.imageSource
+          "empresa_id": route.params.user.userCompanyId,
         }
       };
       var info = new FormData();
@@ -88,23 +87,22 @@ export default function CreateFuelScreen({ navigation, route }) {
 
       let match = /\.(\w+)$/.exec(filename);
       let type = match ? `image/${match[1]}` : `image`;
-      console.log(bodyWS);
       info.append('data', JSON.stringify(bodyWS));
-      info.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
+      info.append('imagenCombustible', { uri: values.urlImage, name: filename, type });
       //console.log(bodyWS);
 
       var parameters = new URLSearchParams({
         id_empresa: route.params.userToken.userCompanyId,
         id_user: route.params.userToken.userId,
       });
-      console.log(info);
+      // console.log(info);
       var urlStore = 'http://gerencia.datum-position.com/api/combustible/storecombustible?' + parameters.toString();
       fetch(urlStore, {
         method: 'POST',
         headers: {
           Accept: "*/*",
           'Content-Type': 'multipart/form-data;',
-          'Authorization': 'Bearer ' + route.params.userToken,
+          'Authorization': 'Bearer ' + route.params.userToken.token,
           'Accept-Encoding': 'gzip;q=1.0, compress;q=0.5'
         },
         body: info
@@ -175,7 +173,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         }
       }).then(res => res.json())
         .then(resData => {
-          //console.log(resData);
+          console.log(resData);
           if (resData.length > 0) {
             setFieldValue('drivers', resData);
             setFieldValue('driverEnable', true);
@@ -314,9 +312,7 @@ export default function CreateFuelScreen({ navigation, route }) {
 
   const seleccionarConductor = async (value) => {
     if (value != "-1") {
-      var id = value.split("-")[0];
-      console.log(id);
-      setFieldValue('driver', id);
+      setFieldValue('driver', value);
       setFieldValue('chargeTo', value);
     }
 
@@ -489,7 +485,7 @@ export default function CreateFuelScreen({ navigation, route }) {
                 <Picker.Item key="-1" label="Seleccione un conductor" value="-1" />
                 {values.drivers.map((driver) => {
                   return (
-                    <Picker.Item key={driver.id_number + "-" + driver.name + " " + driver.surname} label={driver.id_number + " - " + driver.name + " " + driver.surname} value={driver.id_number + "-" + driver.name + " " + driver.surname} />
+                    <Picker.Item key={driver.id_number + "-" + driver.name + " " + driver.surname} label={driver.id_number + " - " + driver.name + " " + driver.surname} value={driver.id} />
                   )
                 })}
               </Picker>

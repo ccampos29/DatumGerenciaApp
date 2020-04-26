@@ -142,7 +142,7 @@ export default function ChecklistScreen({ navigation, route }) {
       return;
     }
 
-    console.log(pickerResult);
+   // console.log(pickerResult);
 
     setSelectedImage({ localUri: pickerResult.uri });;
     //values.urlImage = pickerResult.uri;
@@ -211,7 +211,10 @@ export default function ChecklistScreen({ navigation, route }) {
                       <Label style={{ margin: 5 }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 18 }} >Calificación:</Text>
                       </Label>
+                      {console.log('/////////////////////////////')}
+                      {/* {console.log(Object.keys(novedad.novedad.criterioEvaluacion.detalles_evaluacion))} */}
                       {(novedad.novedad.criterioEvaluacion.tipo == "Lista desplegable") ? (
+                        
                         <Picker
                           mode="dropdown"
                           iosIcon={<Icon name="arrow-down" />}
@@ -221,9 +224,13 @@ export default function ChecklistScreen({ navigation, route }) {
                           onValueChange={handleChange('novedadesCalificadas[' + cont + '].valor_texto_calificacion')}
                         >
                           <Picker.Item key="-1" label="Seleccione un estado" value="-1" />
-                          <Picker.Item key="4" label="Bueno" value="4" />
-                          <Picker.Item key="5" label="Regular" value="5" />
-                          <Picker.Item key="6" label="Malo" value="6" />
+                          {
+                            Object.keys(novedad.novedad.criterioEvaluacion.detalles_evaluacion).map((key)=>{
+                              return(<Picker.Item key={key+""} label={novedad.novedad.criterioEvaluacion.detalles_evaluacion[key]+""} value={key+""} />)
+                              //console.log(key + " "+novedad.novedad.criterioEvaluacion.detalles_evaluacion[key])
+                            })
+                          }
+
                         </Picker>
                       ) : ((novedad.novedad.criterioEvaluacion.tipo == "Editable") ? (
                         <Input style={styles.InputNivel}
@@ -242,8 +249,10 @@ export default function ChecklistScreen({ navigation, route }) {
                             onValueChange={handleChange('novedadesCalificadas[' + cont + '].valor_texto_calificacion')}
                           >
                             <Picker.Item key="-1" label="Seleccione una opción" value="-1" />
-                            <Picker.Item key="1" label="Si" value="1" />
-                            <Picker.Item key="2" label="No" value="2" />
+                            {Object.keys(novedad.novedad.criterioEvaluacion.detalles_evaluacion).map((key)=>{
+                              return(<Picker.Item key={key+""} label={novedad.novedad.criterioEvaluacion.detalles_evaluacion[key]+""} value={key+""} />)
+                              //console.log(key + " "+novedad.novedad.criterioEvaluacion.detalles_evaluacion[key])
+                            })}
                           </Picker>
                         ))
                       }
@@ -346,7 +355,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     marginRight: 3,
     marginTop: 8,
-    backgroundColor: '#FFFF'
+    marginStart: 2,
+    paddingLeft: 3,
+    backgroundColor: '#FFFF',
+    width: 280,
 
   },
   textButton: {

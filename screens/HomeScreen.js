@@ -91,8 +91,8 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       //user_id: 18,
     });
 
-    var urlFuel = 'http://gerencia.datum-position.com/Api/combustible/createcombustible?' + parameters.toString();
-    var urlVehicle = 'http://gerencia.datum-position.com/Api/checklist/getvehiclebyuser?' + parametros.toString();
+    var urlFuel = 'http://gerencia.datum-position.com/api/combustible/createcombustible?' + parameters.toString();
+    var urlVehicle = 'http://gerencia.datum-position.com/api/checklist/getvehiclebyuser?' + parametros.toString();
     console.log(urlFuel);
     var fuelData;
     var vehicleData;
@@ -104,6 +104,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       }
     }).then(res => res.json())
       .then(resData => {
+        console.log(resData);
         if(typeof resData.centrosCostos !== 'undefined'){
           fuelData = resData;
           return fetch(urlVehicle, {
@@ -117,6 +118,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
         } 
       }).then(res=>res.json())
         .then(resData =>{
+          
           if (resData.status === "success") {
             vehicleData = resData.vehiculos;
             return fetch('http://gerencia.datum-position.com/pais/pais-list', {
@@ -131,12 +133,13 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
           //console.log(resData);
           if (typeof resData !== 'undefined') {
             spinnerOff();
-            navigation.navigate("CreateFuel", { userToken: route.params.userToken, fuelData: fuelData, vehicleData: vehicleData, countryData: resData });
+            navigation.navigate("CreateFuel", { userToken: route.params.userToken, fuelData: fuelData, vehicleData: vehicleData, countryData: resData,user: route.params.userToken });
           } else {
             spinnerOff();
             alert("Error autenticando el usuario para la creación de checklist");
           }
       }).catch(e => {
+        console.log(e);
         alert("Error comunicandose con Datum Gerencia");
         spinnerOff();
       });

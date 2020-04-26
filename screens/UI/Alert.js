@@ -22,7 +22,7 @@ const Alert = props => {
             >
                 <View style={styles.content}>
 
-                    <Text style={styles.contentText}>{props.message}</Text>
+                    <Text style={styles.contentText}>{props.mensaje}</Text>
 
                     <TouchableOpacity style={styles.btn} onPress={cambioEstado}>
                         <Text style={styles.btnText}>Aceptar</Text>

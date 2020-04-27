@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { StyleSheet, AsyncStorage, TouchableOpacity, Image, ActivityIndicator, Modal } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, ActivityIndicator, Modal } from 'react-native';
 
 import { useFormik } from 'formik';
-import { ListItem, Body, Icon, Text, Form, Item, Label, Picker, Input, Content, Container, Header, Accordion, View } from 'native-base';
+import { Icon, Text, Form, Item, Label, Picker, Input, Content, Container, Header, Accordion, View } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import Card from './UI/Card';
 import Alert from "./UI/Alert";
@@ -212,8 +212,6 @@ export default function ChecklistScreen({ navigation, route }) {
                       <Label style={{ margin: 5 }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 18 }} >Calificación:</Text>
                       </Label>
-                      {/* {console.log('/////////////////////////////')} */}
-                      {/* {console.log(Object.keys(novedad.novedad.criterioEvaluacion.detalles_evaluacion))} */}
                       {(novedad.novedad.criterioEvaluacion.tipo == "Lista desplegable") ? (
                         
                         <Picker

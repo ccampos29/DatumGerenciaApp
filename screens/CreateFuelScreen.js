@@ -1,11 +1,7 @@
 import * as React from 'react';
-import { StyleSheet, AsyncStorage, TouchableOpacity, Image, Platform, ActivityIndicator, Modal } from 'react-native';
-//import { Icon } from 'react-native-elements'
-//import { createStackNavigator } from '@react-navigation/stack';
+import { StyleSheet, TouchableOpacity, Image, Platform, ActivityIndicator, Modal } from 'react-native';
 import { useFormik } from 'formik';
-import { Button, Textarea, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
-//import {View, Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Switch } from 'native-base';
-import { AuthContext } from '../context/AuthContext';
+import { Textarea, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import { View } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';

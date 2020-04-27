@@ -1,19 +1,11 @@
 import * as React from 'react';
 import { StyleSheet, AsyncStorage, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
-//import { Icon } from 'react-native-elements'
-//import { createStackNavigator } from '@react-navigation/stack';
 import { useFormik } from 'formik';
-import { Button, Textarea, DatePicker, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
-//import {View, Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Switch } from 'native-base';
-import { AuthContext } from './../context/AuthContext';
-
-import AwesomeAlert from 'react-native-awesome-alerts';
+import { Textarea, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
 import Alert from "./UI/Alert";
 import * as Yup from 'yup';
 
 export default function CreateScreen({ navigation, route }) {
-
-  //const { spinnerOn, spinnerOff } = React.useContext(AuthContext);
 
   const vehicles = route.params.checklistData;
 

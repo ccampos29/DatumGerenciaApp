@@ -5,16 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  KeyboardAvoidingView,
   ScrollView,
-  AsyncStorage
 } from "react-native";
 import TextInput from "react-native-textinput-with-icons";
 import Card from "./UI/Card";
 import { AuthContext } from './../context/AuthContext';
-
-import { FancyAlert } from 'react-native-expo-fancy-alerts';
-
 
 export default function LoginScreen() {
 

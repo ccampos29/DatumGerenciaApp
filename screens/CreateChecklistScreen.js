@@ -1,22 +1,21 @@
 import * as React from 'react';
 import { StyleSheet, AsyncStorage, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
-//import { Icon } from 'react-native-elements'
-//import { createStackNavigator } from '@react-navigation/stack';
 import { useFormik } from 'formik';
-import { Button, Textarea, DatePicker, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
-//import {View, Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Switch } from 'native-base';
-import { AuthContext } from './../context/AuthContext';
-
-import AwesomeAlert from 'react-native-awesome-alerts';
+import { Textarea, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
 import Alert from "./UI/Alert";
+import * as Yup from 'yup';
 
 export default function CreateScreen({ navigation, route }) {
 
-  //const { spinnerOn, spinnerOff } = React.useContext(AuthContext);
-
   const vehicles = route.params.checklistData;
 
-  const { values, isSubmitting, setFieldValue, handleSubmit } = useFormik({
+  const validationSchema = Yup.object({
+    plate: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    typeCheckList: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    driver: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+  });
+
+  const { values, isSubmitting, setFieldValue, handleSubmit, errors } = useFormik({
     initialValues:
     {
       plate: '', //necesarios para el diligenciamiento de CL
@@ -73,7 +72,7 @@ export default function CreateScreen({ navigation, route }) {
         body: JSON.stringify(bodyWS)
       }).then(res => res.json())
         .then(resData => {
-          ////console.log(resData);
+          //console.log(resData);
           if (resData.status === "success") {
             // alert(resData.message);
             // navigation.navigate('ChecklistScreen');
@@ -95,7 +94,7 @@ export default function CreateScreen({ navigation, route }) {
         })
         .then(res => res.json())
         .then(resData => {
-          ////console.log(resData);
+          //console.log(resData);
           if (resData != null) {
             setFieldValue('carga', false);
             navigation.navigate("ChecklistScreen", { userToken: route.params.userToken.token, checklistGroup: resData, checklistInfo: checklistInfo, user: route.params.userToken });
@@ -107,7 +106,7 @@ export default function CreateScreen({ navigation, route }) {
           setFieldValue('carga', false);
         });
     },
-
+    validationSchema,
 
   });
 
@@ -182,9 +181,9 @@ export default function CreateScreen({ navigation, route }) {
         .then(resData => {
           //console.log(resData);
           if (resData.length > 0) {
+            setFieldValue('driver', '-1');
             setFieldValue('drivers', resData);
             setFieldValue('driverEnable', true);
-            setFieldValue('driver', '-1');
             setFieldValue('carga', false);
           } else {
             alert("Error obteniendo los conductores que tiene el vehiculo");
@@ -259,7 +258,10 @@ export default function CreateScreen({ navigation, route }) {
               <Alert message={values.erroMsg}visible={values.alert}><Text>Hola mundo</Text></Alert>
             </Modal>
             <Item stackedLabel style={styles.Item}>
-              <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="car" /> <Text >  Vehiculo *</Text></Label>
+              <Text style={styles.fieldTextError}>{errors.plate?"El vehículo es requerido":null}</Text>
+              <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="car" />
+                <Text> Vehículo * </Text>
+              </Label>
               <Picker
                 mode="dropdown"
                 iosIcon={<Icon name="arrow-down" />}
@@ -279,6 +281,7 @@ export default function CreateScreen({ navigation, route }) {
               </Picker>
             </Item>
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.typeCheckList?"El tipo de checklist es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="tasks" /> <Text >  Tipo del Checklist *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -298,6 +301,7 @@ export default function CreateScreen({ navigation, route }) {
               </Picker>
             </Item>
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.driver?"El conductor es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="user" /> <Text >  Conductor *</Text></Label>
               {/* <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={route.params.userToken.userCC + "-" + route.params.userToken.userName} onChangeText={text => setFieldValue('driver', text)} /> */}
               <Picker
@@ -312,7 +316,7 @@ export default function CreateScreen({ navigation, route }) {
                 <Picker.Item key="-1" label="Seleccione un conductor" value="-1" />
                 {values.drivers.map((driver) => {
                   return (
-                    <Picker.Item key={driver.id_number + "-" + driver.name + " " + driver.surname} label={driver.id_number + " - " + driver.name + " " + driver.surname} value={driver.id_number + "-" + driver.name + " " + driver.surname} />
+                    <Picker.Item key={driver.id_number + "-" + driver.name + " " + driver.surname} label={driver.id_number + " - " + driver.name + " " + driver.surname} value={driver.id_number + " - " + driver.name + " " + driver.surname} />
                   )
                 })}
               </Picker>
@@ -433,6 +437,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 80,
     backgroundColor: 'rgba(234, 234, 234, 0.4)',
+  },
+  fieldText:{
+    color: '#000000',
+  },
+  fieldTextError:{
+    color: '#ff0000',
+    fontSize: 14,
   }
 
 });

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, AsyncStorage, TouchableOpacity, Image, ActivityIndicator, Modal } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, ActivityIndicator, Modal } from 'react-native';
 
 import { useFormik } from 'formik';
-import { ListItem, Body, Icon, Text, Form, Item, Label, Picker, Input, Content, Container, Header, Accordion, View } from 'native-base';
+import { Icon, Text, Form, Item, Label, Picker, Input, Content, Container, Header, Accordion, View } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import Card from './UI/Card';
 import Alert from "./UI/Alert";
-
+import * as Yup from 'yup';
 
 export default function ChecklistScreen({ navigation, route }) {
 
@@ -14,13 +14,11 @@ export default function ChecklistScreen({ navigation, route }) {
   const clInfo = route.params.checklistInfo;
   let cont = -1;
 
-  // const form = clGroup.map((grupo)=>{
-  //   return grupo.grupo.novedades;
-  // }).map((novedad)=>{
-  //   return {};
-  // });
+  const validationSchema = Yup.object({
+    urlImage: Yup.string().matches(/^(?!^'').*$/).required('Required'),
+  });
 
-  const { values, isSubmitting, setFieldValue, handleSubmit, handleChange } = useFormik({
+  const { values, isSubmitting, setFieldValue, handleSubmit, handleChange, errors } = useFormik({
     initialValues:
     {
       carga: false,
@@ -43,6 +41,7 @@ export default function ChecklistScreen({ navigation, route }) {
       urlImage: '',
     },
     onSubmit: async (values) => {
+
       setFieldValue('carga', true);
       var info = new FormData();
       var bodyWS = {
@@ -57,7 +56,7 @@ export default function ChecklistScreen({ navigation, route }) {
 
       let match = /\.(\w+)$/.exec(filename);
       let type = match ? `image/${match[1]}` : `image`;
-      console.log(bodyWS);
+      //console.log(bodyWS);
       info.append('data', JSON.stringify(bodyWS));
       info.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
       var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
@@ -96,10 +95,12 @@ export default function ChecklistScreen({ navigation, route }) {
         .catch(e => {
           console.log(e.message);
           console.log(e);
+          setFieldValue('carga', false);
           alert("Error comunicandose");
         });
 
     },
+    validationSchema,
 
   });
 
@@ -211,8 +212,6 @@ export default function ChecklistScreen({ navigation, route }) {
                       <Label style={{ margin: 5 }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 18 }} >Calificación:</Text>
                       </Label>
-                      {console.log('/////////////////////////////')}
-                      {/* {console.log(Object.keys(novedad.novedad.criterioEvaluacion.detalles_evaluacion))} */}
                       {(novedad.novedad.criterioEvaluacion.tipo == "Lista desplegable") ? (
                         
                         <Picker
@@ -233,7 +232,7 @@ export default function ChecklistScreen({ navigation, route }) {
 
                         </Picker>
                       ) : ((novedad.novedad.criterioEvaluacion.tipo == "Editable") ? (
-                        <Input style={styles.InputNivel}
+                        <Input keyboardType='numeric' style={styles.InputNivel}
                           placeholder='Ingrese un número de 0 a 10'
                           editable={true} selectTextOnFocus={false}
                           value={values.novedadesCalificadas[cont].valor_texto_calificacion}
@@ -292,7 +291,7 @@ export default function ChecklistScreen({ navigation, route }) {
             }}>
               <Text style={styles.textButton}>Seleccionar imagen</Text>
             </TouchableOpacity>
-
+            <Text style={styles.fieldTextError}>{errors.urlImage?"La imagen es requerida":null}</Text>
             {imageView(selectedImage, values)}
           </Card>
 
@@ -428,6 +427,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 80,
     backgroundColor: 'rgba(234, 234, 234, 0.4)',
+  },
+  fieldTextError:{
+    color: '#ff0000',
+    fontSize: 14,
+    textAlign: "center",
   }
 
 });

@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, ImageBackground, Modal, ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements'
-import { StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
 import { FlatList } from 'react-native-gesture-handler';
 import CreateChecklist from './CreateChecklistScreen';
-import { navigate } from './RootNavigation';
 import { AuthContext } from './../context/AuthContext';
 import ChecklistScreen from './ChecklistScreen';
 import CreateFuel from './CreateFuelScreen';

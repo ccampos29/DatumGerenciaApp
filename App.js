@@ -112,7 +112,7 @@ export default function App({ navigation }) {
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         dispatch({ type: 'SPINNER_ON' });
-        await fetch('http://gerencia.datum-position.com/api/user/authenticate ', {
+        await fetch('http://gerencia.datum-position.com/api/user/authenticate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -27,7 +27,7 @@
     },
     "android": {
       "package": "com.datumposition.gerencia",
-      "versionCode": 1
+      "versionCode": 1.1
     }
   }
 }

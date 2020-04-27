@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, View, StyleSheet, TouchableOpacity, AsyncStorage, Text } from "react-native";
+import { Button, View, StyleSheet, TouchableOpacity, AsyncStorage, Text,Modal } from "react-native";
 import MyDrawer from "./navigation/DrawerNavigation";
 import LoginScreen from "./screens/LoginScreen";
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,6 +12,7 @@ import * as Font from 'expo-font';
 import Alert from "./screens/UI/Alert";
 import { Ionicons } from '@expo/vector-icons';
 import { FancyAlert } from 'react-native-expo-fancy-alerts';
+import { useFormik } from 'formik';
 
 
 
@@ -25,6 +26,16 @@ export default function App({ navigation }) {
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf')
     });
   }
+  const { values , setFieldValue} = useFormik({
+    initialValues:
+    {
+      visibleError: false,
+      errorMsg: '',
+
+    },
+    onSubmit: async (values) => {
+      
+    }});
 
   loadFonts();
   var alertVisible = false;
@@ -128,8 +139,12 @@ export default function App({ navigation }) {
               dispatch({ type: 'SIGN_IN', token: null });
               //alert("Mal usuario");
               console.log(resData);
-              mostrarError(true, 'mensaje');
-
+              //mostrarError(true, 'mensaje');
+              setFieldValue('errorMsg', resData.error);
+              setFieldValue('visibleError', true);
+              setTimeout(() => {
+                setFieldValue('visibleError', false);
+                }, 3000);
               // Alert.alert(
               //   'Error',
               //   'Usuario y/o contraseña incorrectos, por favor verifique',
@@ -142,8 +157,8 @@ export default function App({ navigation }) {
               //   {cancelable: false},
               // );
 
-              console.log("///////////////////////////");
-
+              //console.log("///////////////////////////");
+              //setFieldValue('visibleError', false);
             }
 
             // if(data.email === resData.login){
@@ -201,6 +216,15 @@ export default function App({ navigation }) {
 
   return (
     <AuthContext.Provider value={authContext}>
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={values.visibleError}
+          onPress={()=>{console.log("auuchh")}}
+          style={{width:300,height:600}}
+        >
+          <Alert mensaje={values.errorMsg}visible={values.visibleError}></Alert>
+        </Modal>
       {state.isLoading ? (
         <AppLoading />
 
@@ -250,9 +274,4 @@ export default function App({ navigation }) {
     </AuthContext.Provider >
   );
 
-
-  function mostrarError(visible, mensaje) {
-    console.log('holaa');
-    return (<Alert visible={visible}><Text style={{ textAlign: 'center' }}>{mensaje}</Text></Alert>)
-  }
 }

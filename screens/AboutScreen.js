@@ -1,12 +1,18 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform,Image } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { createStackNavigator } from '@react-navigation/stack';
 
 function About(){
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Información general de la aplicación</Text>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View >
+      <Image source={require('../assets/datum_logo.png')} style={{backgroundColor:'#E0A729', borderRadius:5,padding:3,marginBottom:20 }} />
+    </View>
+      <Text>Datum Gerencia APP</Text>
+      <Text>Propietario: DATUM POSITION</Text>
+      <Text>Version: V1.1</Text>
+      <Text style={styles.fieldTextError}>Creado por: CRF - Nova Halley System - novahalleysystem.com</Text>
     </View>
   );  
 }
@@ -54,4 +60,10 @@ const styles = StyleSheet.create({
   MenuStyle: {
     margin: 20
   },
+  fieldTextError: {
+    color: '#BEBEBE',
+    fontSize: 11,
+    textAlign: "center",
+    marginTop:100
+  }
 });

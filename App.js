@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, View, StyleSheet, TouchableOpacity, AsyncStorage, Text,Modal } from "react-native";
+import {AsyncStorage,Modal } from "react-native";
 import MyDrawer from "./navigation/DrawerNavigation";
 import LoginScreen from "./screens/LoginScreen";
 import { NavigationContainer } from '@react-navigation/native';
@@ -10,8 +10,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { AuthContext } from './context/AuthContext';
 import * as Font from 'expo-font';
 import Alert from "./screens/UI/Alert";
-import { Ionicons } from '@expo/vector-icons';
-import { FancyAlert } from 'react-native-expo-fancy-alerts';
 import { useFormik } from 'formik';
 
 

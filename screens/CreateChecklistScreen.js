@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, AsyncStorage, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
+import { StyleSheet, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
 import { useFormik } from 'formik';
 import { Textarea, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
 import Alert from "./UI/Alert";
@@ -32,7 +32,7 @@ export default function CreateScreen({ navigation, route }) {
       checklistTypes: new Array(),
       drivers: new Array(),
       carga: false,
-      alert: false,
+      visibleError: false,
       erroMsg: '',
 
     },
@@ -88,7 +88,13 @@ export default function CreateScreen({ navigation, route }) {
           } else {
             // setFieldValue('alert', true);
             // setFieldValue('errorMsg', 'Error en la creacion de Checklist, verifique el vehiculo y el tipo de checklist');
-            alert("Error en la creacion de Checklist, verifique el vehiculo y el tipo de checklist");
+            setFieldValue('carga', false);
+            setFieldValue('errorMsg', 'Error en la creacion de Checklist, verifique el vehiculo y el tipo de checklist');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            //alert("Error en la creacion de Checklist, verifique el vehiculo y el tipo de checklist");
           }
 
         })
@@ -102,8 +108,13 @@ export default function CreateScreen({ navigation, route }) {
         })
         .catch(e => {
           console.log(e);
-          alert("Error comunicandose con Datum Gerencia para crear el checklist");
+          //alert("Error comunicandose con Datum Gerencia para crear el checklist");
           setFieldValue('carga', false);
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para crear el checklist');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
         });
     },
     validationSchema,
@@ -132,11 +143,23 @@ export default function CreateScreen({ navigation, route }) {
           if (resData.status === "success") {
             setFieldValue('currentMeasurement', resData.data.valor);
           } else {
-            alert("Error obteniendo la medicion de odometro del vehiculo");
+            setFieldValue('carga', false);
+            setFieldValue('errorMsg', 'Error obteniendo la medicion de odometro del vehiculo');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            //alert("Error obteniendo la medicion de odometro del vehiculo");
           }
         }).catch(e => {
-          console.log("error medicion")
-          alert("Error comunicandose con Datum Gerencia para odometro");
+          //console.log("error medicion")
+          setFieldValue('carga', false);
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para odometro');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose con Datum Gerencia para odometro");
         });
 
       var parametrosCL = new URLSearchParams({
@@ -159,10 +182,22 @@ export default function CreateScreen({ navigation, route }) {
             setFieldValue('typeCheckListEnable', true);
             setFieldValue('typeCheckList', '-1');
           } else {
-            alert("Error obteniendo los tipos de checklist que tiene el vehiculo");
+            setFieldValue('carga', false);
+            setFieldValue('errorMsg', 'Error obteniendo los tipos de checklist que tiene el vehiculo');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            //alert("Error obteniendo los tipos de checklist que tiene el vehiculo");
           }
         }).catch(e => {
-          alert("Error comunicandose con Datum Gerencia para tipos checklist");
+          setFieldValue('carga', false);
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para tipos checklist');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose con Datum Gerencia para tipos checklist");
         });
 
       var parametrosCL = new URLSearchParams({
@@ -186,10 +221,22 @@ export default function CreateScreen({ navigation, route }) {
             setFieldValue('driverEnable', true);
             setFieldValue('carga', false);
           } else {
-            alert("Error obteniendo los conductores que tiene el vehiculo");
+            setFieldValue('carga', false);
+            setFieldValue('errorMsg', 'Error obteniendo los conductores que tiene el vehiculo');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            // alert("Error obteniendo los conductores que tiene el vehiculo");
           }
         }).catch(e => {
-          alert("Error comunicandose con Datum Gerencia para obtener conductores");
+          setFieldValue('carga', false);
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para obtener conductores');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose con Datum Gerencia para obtener conductores");
         });
 
     }
@@ -220,11 +267,23 @@ export default function CreateScreen({ navigation, route }) {
             else
               setFieldValue('nextMeasurement', "");
           } else {
-            alert("Error obteniendo la informacion despues de seleccionar checklist");
+            setFieldValue('carga', false);
+            setFieldValue('errorMsg', 'Error obteniendo la informacion despues de seleccionar checklist');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            //alert("Error obteniendo la informacion despues de seleccionar checklist");
           }
         }).catch(e => {
           ////console.log(e);
-          alert("Error comunicandose con Datum Gerencia para odometro");
+          setFieldValue('carga', false);
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para odometro');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose con Datum Gerencia para odometro");
         });
 
     }
@@ -253,12 +312,12 @@ export default function CreateScreen({ navigation, route }) {
             <Modal
               animationType="slide"
               transparent={true}
-              visible={values.alert}
+              visible={values.visibleError}
             >
-              <Alert message={values.erroMsg}visible={values.alert}><Text>Hola mundo</Text></Alert>
+              <Alert mensaje={values.errorMsg} visible={values.visibleError}></Alert>
             </Modal>
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.plate?"El vehículo es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.plate ? "El vehículo es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="car" />
                 <Text> Vehículo * </Text>
               </Label>
@@ -281,7 +340,7 @@ export default function CreateScreen({ navigation, route }) {
               </Picker>
             </Item>
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.typeCheckList?"El tipo de checklist es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.typeCheckList ? "El tipo de checklist es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="tasks" /> <Text >  Tipo del Checklist *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -301,7 +360,7 @@ export default function CreateScreen({ navigation, route }) {
               </Picker>
             </Item>
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.driver?"El conductor es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.driver ? "El conductor es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="user" /> <Text >  Conductor *</Text></Label>
               {/* <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={route.params.userToken.userCC + "-" + route.params.userToken.userName} onChangeText={text => setFieldValue('driver', text)} /> */}
               <Picker
@@ -438,10 +497,10 @@ const styles = StyleSheet.create({
     height: 80,
     backgroundColor: 'rgba(234, 234, 234, 0.4)',
   },
-  fieldText:{
+  fieldText: {
     color: '#000000',
   },
-  fieldTextError:{
+  fieldTextError: {
     color: '#ff0000',
     fontSize: 14,
   }

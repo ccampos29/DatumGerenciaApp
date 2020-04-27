@@ -6,6 +6,7 @@ import { Icon, Text, Form, Item, Label, Picker, Input, Content, Container, Heade
 import * as ImagePicker from 'expo-image-picker';
 import Card from './UI/Card';
 import Alert from "./UI/Alert";
+import AlertSuccess from "./UI/AlertSuccess";
 import * as Yup from 'yup';
 
 export default function ChecklistScreen({ navigation, route }) {
@@ -22,7 +23,10 @@ export default function ChecklistScreen({ navigation, route }) {
     initialValues:
     {
       carga: false,
-      alerta: false,
+      visibleError: false,
+      erroMsg: '',
+      visibleSuccess: false,
+      successMsg: '',
       novedadesCalificadas: [].concat.apply([], clGroup.map(grupo => {
         return grupo.grupo.novedades.map(novedad => {
           return {
@@ -74,20 +78,32 @@ export default function ChecklistScreen({ navigation, route }) {
         .then(resData => {
           console.log(resData);
           setFieldValue('carga', false);
-          if(resData.status==="success"){
-            var prueba = clInfo.id_checklist+' '+resData.nombre_checklist + "\n\n" +
-                    resData.creador_checklist + "\n" +
-                    "Vehiculo: " + resData.vehiculo + "\n" +
-                    "Estado: " + resData.estado_checklist + "\n" +
-                    "Aprobado:" + resData.procentaje_aprobado + "\n" +
-                    "Rechazado:" + resData.procentaje_rechazado + "\n" +
-                    "Critico:" + resData.procentaje_rechazado_critico + "\n" +
-                    "TOTAL:" + resData.total;
-            alert(prueba);
-            navigation.navigate('Home');
-            
-          }else{
-            alert("Error en la creacion de Checklist, verifique el formulario");
+          if (resData.status === "success") {
+            var result = clInfo.id_checklist + ' - ' + resData.nombre_checklist + "\n\n" +
+              resData.creador_checklist + "\n" +
+              "Vehiculo: " + resData.vehiculo + "\n" +
+              "Estado: " + resData.estado_checklist + "\n" +
+              "Aprobado:" + resData.procentaje_aprobado + "\n" +
+              "Rechazado:" + resData.procentaje_rechazado + "\n" +
+              "Critico:" + resData.procentaje_rechazado_critico + "\n" +
+              "TOTAL:" + resData.total;
+
+            setFieldValue('successMsg', result);
+            setFieldValue('visibleSuccess', true);
+            setTimeout(() => {
+              setFieldValue('visibleSuccess', false);
+              navigation.navigate('Home');
+            }, 7000);
+            //alert(prueba);
+
+          } else {
+            setFieldValue('carga', false);
+            setFieldValue('errorMsg', 'Error en la creacion de Checklist, verifique el formulario');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            //alert("Error en la creacion de Checklist, verifique el formulario");
           }
           //setFieldValue('alerta', true);
 
@@ -96,7 +112,12 @@ export default function ChecklistScreen({ navigation, route }) {
           console.log(e.message);
           console.log(e);
           setFieldValue('carga', false);
-          alert("Error comunicandose");
+          setFieldValue('errorMsg', 'Error de comunicación con Datum Gerencia');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose");
         });
 
     },
@@ -111,7 +132,12 @@ export default function ChecklistScreen({ navigation, route }) {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('El permiso de acceso a cámara y galeria son requeridos!');
+      setFieldValue('errorMsg', 'El permiso de acceso a cámara y galeria son requeridos!');
+      setFieldValue('visibleError', true);
+      setTimeout(() => {
+        setFieldValue('visibleError', false);
+      }, 3000);
+      //alert('El permiso de acceso a cámara y galeria son requeridos!');
       return;
     }
 
@@ -132,7 +158,12 @@ export default function ChecklistScreen({ navigation, route }) {
     let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('El permiso de acceso a cámara y galeria son requeridos!');
+      setFieldValue('errorMsg', 'El permiso de acceso a cámara y galeria son requeridos!');
+      setFieldValue('visibleError', true);
+      setTimeout(() => {
+        setFieldValue('visibleError', false);
+      }, 3000);
+      //alert('El permiso de acceso a cámara y galeria son requeridos!');
       return;
     }
 
@@ -143,7 +174,7 @@ export default function ChecklistScreen({ navigation, route }) {
       return;
     }
 
-   // console.log(pickerResult);
+    // console.log(pickerResult);
 
     setSelectedImage({ localUri: pickerResult.uri });;
     //values.urlImage = pickerResult.uri;
@@ -168,9 +199,16 @@ export default function ChecklistScreen({ navigation, route }) {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={values.alerta}
+          visible={values.visibleError}
         >
-          <Alert visible={values.alerta}><Text>Hola mundo</Text></Alert>
+          <Alert visible={values.visibleError}></Alert>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={values.visibleSuccess}
+        >
+          <AlertSuccess mensaje={values.successMsg} visible={values.visibleSuccess}></AlertSuccess>
         </Modal>
         <Form>
 
@@ -213,7 +251,7 @@ export default function ChecklistScreen({ navigation, route }) {
                         <Text style={{ fontWeight: 'bold', fontSize: 18 }} >Calificación:</Text>
                       </Label>
                       {(novedad.novedad.criterioEvaluacion.tipo == "Lista desplegable") ? (
-                        
+
                         <Picker
                           mode="dropdown"
                           iosIcon={<Icon name="arrow-down" />}
@@ -224,8 +262,8 @@ export default function ChecklistScreen({ navigation, route }) {
                         >
                           <Picker.Item key="-1" label="Seleccione un estado" value="-1" />
                           {
-                            Object.keys(novedad.novedad.criterioEvaluacion.detalles_evaluacion).map((key)=>{
-                              return(<Picker.Item key={key+""} label={novedad.novedad.criterioEvaluacion.detalles_evaluacion[key]+""} value={key+""} />)
+                            Object.keys(novedad.novedad.criterioEvaluacion.detalles_evaluacion).map((key) => {
+                              return (<Picker.Item key={key + ""} label={novedad.novedad.criterioEvaluacion.detalles_evaluacion[key] + ""} value={key + ""} />)
                               //console.log(key + " "+novedad.novedad.criterioEvaluacion.detalles_evaluacion[key])
                             })
                           }
@@ -248,8 +286,8 @@ export default function ChecklistScreen({ navigation, route }) {
                             onValueChange={handleChange('novedadesCalificadas[' + cont + '].valor_texto_calificacion')}
                           >
                             <Picker.Item key="-1" label="Seleccione una opción" value="-1" />
-                            {Object.keys(novedad.novedad.criterioEvaluacion.detalles_evaluacion).map((key)=>{
-                              return(<Picker.Item key={key+""} label={novedad.novedad.criterioEvaluacion.detalles_evaluacion[key]+""} value={key+""} />)
+                            {Object.keys(novedad.novedad.criterioEvaluacion.detalles_evaluacion).map((key) => {
+                              return (<Picker.Item key={key + ""} label={novedad.novedad.criterioEvaluacion.detalles_evaluacion[key] + ""} value={key + ""} />)
                               //console.log(key + " "+novedad.novedad.criterioEvaluacion.detalles_evaluacion[key])
                             })}
                           </Picker>
@@ -291,7 +329,7 @@ export default function ChecklistScreen({ navigation, route }) {
             }}>
               <Text style={styles.textButton}>Seleccionar imagen</Text>
             </TouchableOpacity>
-            <Text style={styles.fieldTextError}>{errors.urlImage?"La imagen es requerida":null}</Text>
+            <Text style={styles.fieldTextError}>{errors.urlImage ? "La imagen es requerida" : null}</Text>
             {imageView(selectedImage, values)}
           </Card>
 
@@ -428,7 +466,7 @@ const styles = StyleSheet.create({
     height: 80,
     backgroundColor: 'rgba(234, 234, 234, 0.4)',
   },
-  fieldTextError:{
+  fieldTextError: {
     color: '#ff0000',
     fontSize: 14,
     textAlign: "center",

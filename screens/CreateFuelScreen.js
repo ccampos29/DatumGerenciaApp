@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { View } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Alert from "./UI/Alert";
+import AlertSuccess from "./UI/AlertSuccess";
 import * as Yup from 'yup';
 
 export default function CreateFuelScreen({ navigation, route }) {
@@ -37,12 +38,14 @@ export default function CreateFuelScreen({ navigation, route }) {
     driver: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
   });
 
-  const { values, isSubmitting, setFieldValue, handleSubmit,errors } = useFormik({
+  const { values, isSubmitting, setFieldValue, handleSubmit, errors } = useFormik({
     initialValues:
     {
       carga: false,
-      alerta: false,
-      errorMsg: '',
+      visibleError: false,
+      erroMsg: '',
+      visibleSuccess: false,
+      successMsg: '',
       drivers: new Array(),
       date: calculateDate(new Date()), //necesarios para el diligenciamiento de CL
       time: new Date().toLocaleTimeString(),
@@ -63,7 +66,7 @@ export default function CreateFuelScreen({ navigation, route }) {
       observation: '',
       imageSource: '',
       urlImage: '',
-      driver:'',
+      driver: '',
 
       departmentList: new Array(),
       cityList: new Array(),
@@ -124,21 +127,36 @@ export default function CreateFuelScreen({ navigation, route }) {
         .then(resData => {
           console.log(resData);
           if (resData.status === "success") {
-            var prueba = resData.message;
-            alert(prueba);
+            var result = resData.message;
+            //alert(prueba);
             setFieldValue('carga', false);
-            navigation.navigate('Home');
+            setFieldValue('successMsg', result);
+            setFieldValue('visibleSuccess', true);
+            setTimeout(() => {
+              setFieldValue('visibleSuccess', false);
+              navigation.navigate('Home');
+            }, 7000);
 
           } else {
             setFieldValue('carga', false);
-            alert("Error en la creacion de Combustible, verifique el formulario");
+            //alert("Error en la creacion de Combustible, verifique el formulario");
+            setFieldValue('errorMsg', 'Error en la creacion de Combustible, verifique el formulario');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
           }
 
         })
         .catch(e => {
           console.log(e.message);
           setFieldValue('carga', false);
-          alert("Error comunicandose con Datum Gerencia para crear el combustible");
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para crear el combustible');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose con Datum Gerencia para crear el combustible");
         });
 
     },
@@ -167,10 +185,22 @@ export default function CreateFuelScreen({ navigation, route }) {
           if (resData.status === "success") {
             setFieldValue('measurement', resData.data.valor);
           } else {
-            alert("Error obteniendo la medicion de odometro del vehiculo");
+            setFieldValue('carga', false);
+            setFieldValue('errorMsg', 'Error obteniendo la medicion de odometro del vehiculo');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            //alert("Error obteniendo la medicion de odometro del vehiculo");
           }
         }).catch(e => {
-          alert("Error comunicandose con Datum Gerencia para odometro");
+          setFieldValue('carga', false);
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para odometro');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose con Datum Gerencia para odometro");
         });
       //setFieldValue('carga', false);
 
@@ -195,10 +225,22 @@ export default function CreateFuelScreen({ navigation, route }) {
             setFieldValue('driverEnable', true);
             setFieldValue('carga', false);
           } else {
-            alert("Error obteniendo los conductores que tiene el vehiculo");
+            setFieldValue('carga', false);
+            setFieldValue('errorMsg', 'Error obteniendo los conductores que tiene el vehiculo');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            //alert("Error obteniendo los conductores que tiene el vehiculo");
           }
         }).catch(e => {
-          alert("Error comunicandose con Datum Gerencia para obtener conductores");
+          setFieldValue('carga', false);
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para obtener conductores');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose con Datum Gerencia para obtener conductores");
         });
 
     }
@@ -225,10 +267,21 @@ export default function CreateFuelScreen({ navigation, route }) {
           if (resData.length > 0) {
             setFieldValue('departmentList', resData);
           } else {
-            alert("El pais no tiene departamentos");
+            //setFieldValue('carga', false);
+            setFieldValue('errorMsg', 'El pais no tiene departamentos');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            //alert("El pais no tiene departamentos");
           }
         }).catch(e => {
-          alert("Error comunicandose con Datum Gerencia para sleccionar un pais");
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para sleccionar un pais');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose con Datum Gerencia para sleccionar un pais");
         });
     }
   }
@@ -254,10 +307,20 @@ export default function CreateFuelScreen({ navigation, route }) {
           if (resData.length > 0) {
             setFieldValue('cityList', resData);
           } else {
-            alert("El departamento no tiene ciudades");
+            setFieldValue('errorMsg', 'El departamento no tiene ciudades');
+            setFieldValue('visibleError', true);
+            setTimeout(() => {
+              setFieldValue('visibleError', false);
+            }, 3000);
+            //alert("El departamento no tiene ciudades");
           }
         }).catch(e => {
-          alert("Error comunicandose con Datum Gerencia para seleccionar un departamento");
+          setFieldValue('errorMsg', 'Error comunicandose con Datum Gerencia para seleccionar un departamento');
+          setFieldValue('visibleError', true);
+          setTimeout(() => {
+            setFieldValue('visibleError', false);
+          }, 3000);
+          //alert("Error comunicandose con Datum Gerencia para seleccionar un departamento");
         });
     }
   }
@@ -272,7 +335,12 @@ export default function CreateFuelScreen({ navigation, route }) {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('El permiso de acceso a cámara y galeria son requeridos!');
+      setFieldValue('errorMsg', 'El permiso de acceso a cámara y galeria son requeridos!');
+      setFieldValue('visibleError', true);
+      setTimeout(() => {
+        setFieldValue('visibleError', false);
+      }, 3000);
+      //alert('El permiso de acceso a cámara y galeria son requeridos!');
       return;
     }
 
@@ -293,7 +361,12 @@ export default function CreateFuelScreen({ navigation, route }) {
     let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('El permiso de acceso a cámara y galeria son requeridos!');
+      setFieldValue('errorMsg', 'El permiso de acceso a cámara y galeria son requeridos!');
+      setFieldValue('visibleError', true);
+      setTimeout(() => {
+        setFieldValue('visibleError', false);
+      }, 3000);
+      //alert('El permiso de acceso a cámara y galeria son requeridos!');
       return;
     }
 
@@ -304,7 +377,7 @@ export default function CreateFuelScreen({ navigation, route }) {
       return;
     }
 
-   // console.log(pickerResult);
+    // console.log(pickerResult);
 
     setSelectedImage({ localUri: pickerResult.uri });;
     //values.urlImage = pickerResult.uri;
@@ -358,9 +431,16 @@ export default function CreateFuelScreen({ navigation, route }) {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={values.alerta}
+          visible={values.visibleError}
         >
-          <Alert mensaje={values.errorMsg} visible={values.alerta}></Alert>
+          <Alert mensaje={values.errorMsg} visible={values.visibleError}></Alert>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={values.visibleSuccess}
+        >
+          <AlertSuccess mensaje={values.successMsg} visible={values.visibleSuccess}></AlertSuccess>
         </Modal>
         <Form>
           <Card style={styles.CardDisable}>
@@ -397,7 +477,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             )}
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.full ?"El tanqueo full es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.full ? "El tanqueo full es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="gas-pump" /> <Text >  Tanqueo Full *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -414,19 +494,19 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.cost ?"El costo es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.cost ? "El costo es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="dollar-sign" /> <Text >  Costo por Galon *</Text></Label>
               <Input keyboardType='numeric' style={styles.Input} editable={true} selectTextOnFocus={false} value={values.cost} onChangeText={text => setFieldValue('cost', text)} />
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.quantity ?"La cantidad es requerida":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.quantity ? "La cantidad es requerida" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="hashtag" /> <Text >  Cantidad de Combustible *</Text></Label>
               <Input keyboardType='numeric' style={styles.Input} editable={true} selectTextOnFocus={false} value={values.quantity} onChangeText={text => setFieldValue('quantity', text)} />
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.provider ?"El proveedor es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.provider ? "El proveedor es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="gas-pump" /> <Text >  Proveedor *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -446,13 +526,13 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.ticketNumber ?"El tiquete es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.ticketNumber ? "El tiquete es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="hashtag" /> <Text >  Numero del tiquete</Text></Label>
               <Input keyboardType='numeric' style={styles.Input} editable={true} selectTextOnFocus={false} value={values.ticketNumber} onChangeText={text => setFieldValue('ticketNumber', text)} />
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.vehicle ?"El vehiculo es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.vehicle ? "El vehiculo es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="car" /> <Text >  Vehiculo *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -472,7 +552,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.fuelType ?"El tipo es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.fuelType ? "El tipo es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="list" /> <Text >  Tipo de Combustible *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -492,7 +572,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.driver ?"El conductor es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.driver ? "El conductor es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="user" /> <Text >  Cargar a *</Text></Label>
               {/* <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={route.params.userToken.userCC + "-" + route.params.userToken.userName} onChangeText={text => setFieldValue('driver', text)} /> */}
               <Picker
@@ -514,7 +594,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.associatedGroup ?"El grupo es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.associatedGroup ? "El grupo es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="users" /> <Text >  Grupo Asociado *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -534,7 +614,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.userMeasurement ?"La medicion es requerida":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.userMeasurement ? "La medicion es requerida" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="plus" /> <Text >  Medición *</Text></Label>
               <Input keyboardType='numeric' style={styles.Input} editable={true} selectTextOnFocus={false} value={values.userMeasurement} onChangeText={text => setFieldValue('userMeasurement', text)} />
             </Item>
@@ -545,7 +625,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.costsCenter ?"El centro es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.costsCenter ? "El centro es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="map" /> <Text >  Centro de Costos *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -565,7 +645,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.country ?"El pais es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.country ? "El pais es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="map" /> <Text >  Pais *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -585,7 +665,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.department ?"El departamento es requerido":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.department ? "El departamento es requerido" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="map-pin" /> <Text >  Departamento *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -605,7 +685,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
-              <Text style={styles.fieldTextError}>{errors.city ?"La ciudad es requerida":null}</Text>
+              <Text style={styles.fieldTextError}>{errors.city ? "La ciudad es requerida" : null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="map-pin" /> <Text >  Ciudad *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -651,8 +731,8 @@ export default function CreateFuelScreen({ navigation, route }) {
               <Text style={styles.textButton}>Seleccionar imagen</Text>
             </TouchableOpacity>
 
-            <Text style={styles.fieldTextError}>{errors.urlImage ?"La imagen es requerida":null}</Text>
-            {imageView(selectedImage,values)}
+            <Text style={styles.fieldTextError}>{errors.urlImage ? "La imagen es requerida" : null}</Text>
+            {imageView(selectedImage, values)}
           </Card>
 
           <Card>
@@ -780,10 +860,10 @@ const styles = StyleSheet.create({
     height: 80,
     backgroundColor: 'rgba(234, 234, 234, 0.4)',
   },
-  fieldTextError:{
+  fieldTextError: {
     color: '#ff0000',
     fontSize: 14,
-    textAlign:'center',
+    textAlign: 'center',
   }
 
 });

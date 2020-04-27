@@ -4,12 +4,13 @@ import { Icon } from 'react-native-elements'
 import { createStackNavigator } from '@react-navigation/stack';
 import { FlatList } from 'react-native-gesture-handler';
 import CreateChecklist from './CreateChecklistScreen';
-import { AuthContext } from './../context/AuthContext';
+//import { AuthContext } from './../context/AuthContext';
 import ChecklistScreen from './ChecklistScreen';
 import CreateFuel from './CreateFuelScreen';
 
 import { useFormik } from 'formik';
 import Alert from "./UI/Alert";
+
 
 function Home({ navigation, route }) {
   const data = [
@@ -19,8 +20,8 @@ function Home({ navigation, route }) {
     // { key: 4, label: 'NOVEDADES', crear: 'CREAR', ver: 'VER', image: require('./../assets/novedades.png') },
   ];
 
-  const { spinnerOn } = React.useContext(AuthContext);
-  const { spinnerOff } = React.useContext(AuthContext);
+  // const { spinnerOn } = React.useContext(AuthContext);
+  // const { spinnerOff } = React.useContext(AuthContext);
 
   const { values, setFieldValue } = useFormik({
     initialValues:

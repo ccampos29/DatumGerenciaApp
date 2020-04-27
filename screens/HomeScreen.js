@@ -65,7 +65,7 @@ async function _onPress(item, navigation, route, spinnerOn, spinnerOff) {
       .then(resData => {
        // console.log(resData);
         if (resData.status === "success") {
-          console.log("////////////////////////////////////////////////");
+          //console.log("////////////////////////////////////////////////");
           spinnerOff();
           navigation.navigate("CreateChecklist", { userToken: route.params.userToken, checklistData: resData.vehiculos });
         } else {

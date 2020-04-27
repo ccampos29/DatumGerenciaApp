@@ -10,6 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { View } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Alert from "./UI/Alert";
+import * as Yup from 'yup';
 
 export default function CreateFuelScreen({ navigation, route }) {
   // console.log(route.params.fuelData);
@@ -22,7 +23,25 @@ export default function CreateFuelScreen({ navigation, route }) {
   const providerList = route.params.fuelData.proveedores;
   const countryList = route.params.countryData.results;
 
-  const { values, isSubmitting, setFieldValue, handleSubmit } = useFormik({
+  const validationSchema = Yup.object({
+    full: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    cost: Yup.string().matches(/^([0-9])+$/).required('Required'),
+    quantity: Yup.string().matches(/^([0-9])+$/).required('Required'),
+    provider: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    ticketNumber: Yup.string().matches(/^([0-9])+$/).required('Required'),
+    vehicle: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    fuelType: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    associatedGroup: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    userMeasurement: Yup.string().matches(/^([0-9])+$/).required('Required'),
+    costsCenter: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    country: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    department: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    city: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+    urlImage: Yup.string().matches(/^(?!^'').*$/).required('Required'),
+    driver: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
+  });
+
+  const { values, isSubmitting, setFieldValue, handleSubmit,errors } = useFormik({
     initialValues:
     {
       carga: false,
@@ -38,7 +57,6 @@ export default function CreateFuelScreen({ navigation, route }) {
       ticketNumber: '',
       vehicle: '',
       fuelType: '',
-      chargeTo: route.params.userToken.userId,
       associatedGroup: '',
       userMeasurement: '0',
       measurement: '',
@@ -128,6 +146,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         });
 
     },
+    validationSchema,
   });
 
   const seleccionarVehiculo = async (value) => {
@@ -148,7 +167,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         }
       }).then(res => res.json())
         .then(resData => {
-          console.log(resData);
+          //console.log(resData);
           if (resData.status === "success") {
             setFieldValue('measurement', resData.data.valor);
           } else {
@@ -173,11 +192,11 @@ export default function CreateFuelScreen({ navigation, route }) {
         }
       }).then(res => res.json())
         .then(resData => {
-          console.log(resData);
+          //console.log(resData);
           if (resData.length > 0) {
+            setFieldValue('driver', '-1');
             setFieldValue('drivers', resData);
             setFieldValue('driverEnable', true);
-            setFieldValue('driver', '-1');
             setFieldValue('carga', false);
           } else {
             alert("Error obteniendo los conductores que tiene el vehiculo");
@@ -313,7 +332,6 @@ export default function CreateFuelScreen({ navigation, route }) {
   const seleccionarConductor = async (value) => {
     if (value != "-1") {
       setFieldValue('driver', value);
-      setFieldValue('chargeTo', value);
     }
 
   }
@@ -383,6 +401,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             )}
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.full ?"El tanqueo full es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="gas-pump" /> <Text >  Tanqueo Full *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -399,16 +418,19 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.cost ?"El costo es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="dollar-sign" /> <Text >  Costo por Galon *</Text></Label>
-              <Input style={styles.Input} editable={true} selectTextOnFocus={false} value={values.cost} onChangeText={text => setFieldValue('cost', text)} />
+              <Input keyboardType='numeric' style={styles.Input} editable={true} selectTextOnFocus={false} value={values.cost} onChangeText={text => setFieldValue('cost', text)} />
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.quantity ?"La cantidad es requerida":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="hashtag" /> <Text >  Cantidad de Combustible *</Text></Label>
-              <Input style={styles.Input} editable={true} selectTextOnFocus={false} value={values.quantity} onChangeText={text => setFieldValue('quantity', text)} />
+              <Input keyboardType='numeric' style={styles.Input} editable={true} selectTextOnFocus={false} value={values.quantity} onChangeText={text => setFieldValue('quantity', text)} />
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.provider ?"El proveedor es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="gas-pump" /> <Text >  Proveedor *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -428,11 +450,13 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.ticketNumber ?"El tiquete es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="hashtag" /> <Text >  Numero del tiquete</Text></Label>
-              <Input style={styles.Input} editable={true} selectTextOnFocus={false} value={values.ticketNumber} onChangeText={text => setFieldValue('ticketNumber', text)} />
+              <Input keyboardType='numeric' style={styles.Input} editable={true} selectTextOnFocus={false} value={values.ticketNumber} onChangeText={text => setFieldValue('ticketNumber', text)} />
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.vehicle ?"El vehiculo es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="car" /> <Text >  Vehiculo *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -452,6 +476,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.fuelType ?"El tipo es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="list" /> <Text >  Tipo de Combustible *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -471,6 +496,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.driver ?"El conductor es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome" name="user" /> <Text >  Cargar a *</Text></Label>
               {/* <Input style={styles.Input} editable={false} selectTextOnFocus={false} value={route.params.userToken.userCC + "-" + route.params.userToken.userName} onChangeText={text => setFieldValue('driver', text)} /> */}
               <Picker
@@ -478,7 +504,7 @@ export default function CreateFuelScreen({ navigation, route }) {
                 iosIcon={<Icon name="arrow-down" />}
                 style={styles.Select}
                 enabled={values.driverEnable}
-                selectedValue={values.chargeTo}
+                selectedValue={values.driver}
                 onValueChange={value => seleccionarConductor(value)}
               >
                 {/* Se modifican segun lo traido del web service */}
@@ -492,6 +518,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.associatedGroup ?"El grupo es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="users" /> <Text >  Grupo Asociado *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -511,8 +538,9 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.userMeasurement ?"La medicion es requerida":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="plus" /> <Text >  Medición *</Text></Label>
-              <Input style={styles.Input} editable={true} selectTextOnFocus={false} value={values.userMeasurement} onChangeText={text => setFieldValue('userMeasurement', text)} />
+              <Input keyboardType='numeric' style={styles.Input} editable={true} selectTextOnFocus={false} value={values.userMeasurement} onChangeText={text => setFieldValue('userMeasurement', text)} />
             </Item>
 
             <Item stackedLabel style={styles.Item}>
@@ -521,6 +549,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.costsCenter ?"El centro es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="map" /> <Text >  Centro de Costos *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -540,6 +569,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.country ?"El pais es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="map" /> <Text >  Pais *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -559,6 +589,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.department ?"El departamento es requerido":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="map-pin" /> <Text >  Departamento *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -578,6 +609,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </Item>
 
             <Item stackedLabel style={styles.Item}>
+              <Text style={styles.fieldTextError}>{errors.city ?"La ciudad es requerida":null}</Text>
               <Label> <Icon style={styles.LabelIcon} type="FontAwesome5" name="map-pin" /> <Text >  Ciudad *</Text></Label>
               <Picker
                 mode="dropdown"
@@ -623,6 +655,7 @@ export default function CreateFuelScreen({ navigation, route }) {
               <Text style={styles.textButton}>Seleccionar imagen</Text>
             </TouchableOpacity>
 
+            <Text style={styles.fieldTextError}>{errors.urlImage ?"La imagen es requerida":null}</Text>
             {imageView(selectedImage,values)}
           </Card>
 
@@ -750,6 +783,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 80,
     backgroundColor: 'rgba(234, 234, 234, 0.4)',
+  },
+  fieldTextError:{
+    color: '#ff0000',
+    fontSize: 14,
+    textAlign:'center',
   }
 
 });

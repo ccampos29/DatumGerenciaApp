@@ -16,7 +16,7 @@ export default function ChecklistScreen({ navigation, route }) {
   let cont = -1;
 
   const validationSchema = Yup.object({
-    urlImage: Yup.string().matches(/^(?!^'').*$/).required('Required'),
+    urlImage: Yup.string().matches(/^(?!^'').*$/),
   });
 
   const { values, isSubmitting, setFieldValue, handleSubmit, handleChange, errors } = useFormik({
@@ -43,6 +43,7 @@ export default function ChecklistScreen({ navigation, route }) {
       }
       )),
       urlImage: '',
+      imageValidation: false,
     },
     onSubmit: async (values) => {
 
@@ -55,21 +56,31 @@ export default function ChecklistScreen({ navigation, route }) {
 
         },
       };
+      var contentType ='';
+      if(values.imageValidation){
+        let filename = values.urlImage.split('/').pop();
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        //console.log(bodyWS);
+        info.append('data', JSON.stringify(bodyWS));
+        info.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
+        contentType ='multipart/form-data;';
+      }else{
 
-      let filename = values.urlImage.split('/').pop();
-
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
-      //console.log(bodyWS);
-      info.append('data', JSON.stringify(bodyWS));
-      info.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
+        info.append('data', JSON.stringify(bodyWS));
+        // info.append('imagenChecklist', '');
+        contentType ='application/json;';
+        
+      }
+      console.log(info);
+      console.log(contentType);
       var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
       // console.log(info);  
       await fetch(urlCal, {
         method: 'POST',
         headers: {
           Accept: "*/*",
-          'Content-Type': 'multipart/form-data;',
+          'Content-Type': ''+contentType,
           Authorization: 'Bearer ' + route.params.userToken,
           'Accept-Encoding': 'gzip;q=1.0, compress;q=0.5'
         },
@@ -97,6 +108,7 @@ export default function ChecklistScreen({ navigation, route }) {
             //alert(prueba);
 
           } else {
+              console.log(resData);
             setFieldValue('carga', false);
             setFieldValue('errorMsg', 'Error en la creacion de Checklist, verifique el formulario');
             setFieldValue('visibleError', true);
@@ -149,6 +161,7 @@ export default function ChecklistScreen({ navigation, route }) {
     }
 
     setSelectedImage({ localUri: pickerResult.uri });
+    setFieldValue('imageValidation', true);
     // values.urlImage = pickerResult.uri;
     //console.log(values.urlImage);
 
@@ -176,7 +189,9 @@ export default function ChecklistScreen({ navigation, route }) {
 
     // console.log(pickerResult);
 
-    setSelectedImage({ localUri: pickerResult.uri });;
+    setSelectedImage({ localUri: pickerResult.uri });
+    setFieldValue('imageValidation', true);
+
     //values.urlImage = pickerResult.uri;
     //console.log(values.urlImage);
 

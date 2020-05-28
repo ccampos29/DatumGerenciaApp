@@ -48,7 +48,7 @@ export default function ChecklistScreen({ navigation, route }) {
     onSubmit: async (values) => {
 
       setFieldValue('carga', true);
-      var info = new FormData();
+      var info;
       var bodyWS = {
         "id_checklist": clInfo.id_checklist,
         "data": {
@@ -58,22 +58,23 @@ export default function ChecklistScreen({ navigation, route }) {
       };
       var contentType ='';
       if(values.imageValidation){
+        info = new FormData();
         let filename = values.urlImage.split('/').pop();
         let match = /\.(\w+)$/.exec(filename);
         let type = match ? `image/${match[1]}` : `image`;
-        //console.log(bodyWS);
         info.append('data', JSON.stringify(bodyWS));
         info.append('imagenChecklist', { uri: values.urlImage, name: filename, type });
-        contentType ='multipart/form-data;';
+        info.append('image', true);
+        contentType ='multipart/form-data';
       }else{
-
-        info.append('data', JSON.stringify(bodyWS));
-        // info.append('imagenChecklist', '');
-        contentType ='application/json;';
+        info = [];
+        info = JSON.stringify({'data': JSON.stringify(bodyWS), 'image': false});
+        contentType ='application/json';
         
       }
       console.log(info);
       console.log(contentType);
+      // var urlCal = 'http://192.168.100.92/api/checklist/calificarchecklist';
       var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
       // console.log(info);  
       await fetch(urlCal, {
@@ -108,7 +109,7 @@ export default function ChecklistScreen({ navigation, route }) {
             //alert(prueba);
 
           } else {
-              console.log(resData);
+            // console.log(resData);
             setFieldValue('carga', false);
             setFieldValue('errorMsg', 'Error en la creacion de Checklist, verifique el formulario');
             setFieldValue('visibleError', true);
@@ -121,7 +122,6 @@ export default function ChecklistScreen({ navigation, route }) {
 
         })
         .catch(e => {
-          console.log(e.message);
           console.log(e);
           setFieldValue('carga', false);
           setFieldValue('errorMsg', 'Error de comunicación con Datum Gerencia');

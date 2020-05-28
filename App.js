@@ -110,6 +110,7 @@ export default function App({ navigation }) {
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         dispatch({ type: 'SPINNER_ON' });
+        // await fetch('http://192.168.100.92/api/user/authenticate', {
         await fetch('http://gerencia.datum-position.com/api/user/authenticate', {
           method: 'POST',
           headers: {
@@ -167,7 +168,7 @@ export default function App({ navigation }) {
             //   alert("Mal usuario");
             // }
           }).catch(e => {
-            console.log("Hay un error!, " + e);
+            console.log("Hay un error!, " + e.message);
             dispatch({ type: 'SPINNER_OFF' });
             alertVisible = true;
             mensajeError = 'funcionaaa';

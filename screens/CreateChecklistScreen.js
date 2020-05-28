@@ -314,7 +314,7 @@ export default function CreateScreen({ navigation, route }) {
               transparent={true}
               visible={values.visibleError}
             >
-              <Alert mensaje={values.errorMsg} visible={values.visibleError}></Alert>
+              <Alert message={values.errorMsg} visible={values.visibleError}></Alert>
             </Modal>
             <Item stackedLabel style={styles.Item}>
               <Text style={styles.fieldTextError}>{errors.plate ? "El vehículo es requerido" : null}</Text>

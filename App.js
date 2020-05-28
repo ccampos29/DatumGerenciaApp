@@ -222,7 +222,7 @@ export default function App({ navigation }) {
           onPress={()=>{console.log("auuchh")}}
           style={{width:300,height:600}}
         >
-          <Alert mensaje={values.errorMsg}visible={values.visibleError}></Alert>
+          <Alert message={values.errorMsg}visible={values.visibleError}></Alert>
         </Modal>
       {state.isLoading ? (
         <AppLoading />

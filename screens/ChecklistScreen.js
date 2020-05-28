@@ -111,7 +111,7 @@ export default function ChecklistScreen({ navigation, route }) {
           } else {
             // console.log(resData);
             setFieldValue('carga', false);
-            setFieldValue('errorMsg', 'Error en la creacion de Checklist, verifique el formulario');
+            setFieldValue('errorMsg', resData.message);
             setFieldValue('visibleError', true);
             setTimeout(() => {
               setFieldValue('visibleError', false);
@@ -216,7 +216,7 @@ export default function ChecklistScreen({ navigation, route }) {
           transparent={true}
           visible={values.visibleError}
         >
-          <Alert visible={values.visibleError}></Alert>
+          <Alert visible={values.visibleError} message={values.errorMsg}></Alert>
         </Modal>
         <Modal
           animationType="slide"

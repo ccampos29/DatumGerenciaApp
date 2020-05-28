@@ -140,7 +140,7 @@ export default function CreateFuelScreen({ navigation, route }) {
           } else {
             setFieldValue('carga', false);
             //alert("Error en la creacion de Combustible, verifique el formulario");
-            setFieldValue('errorMsg', 'Error en la creacion de Combustible, verifique el formulario');
+            setFieldValue('errorMsg', 'Error en la creación de Combustible, verifique el formulario');
             setFieldValue('visibleError', true);
             setTimeout(() => {
               setFieldValue('visibleError', false);
@@ -433,7 +433,7 @@ export default function CreateFuelScreen({ navigation, route }) {
           transparent={true}
           visible={values.visibleError}
         >
-          <Alert mensaje={values.errorMsg} visible={values.visibleError}></Alert>
+          <Alert message={values.errorMsg} visible={values.visibleError}></Alert>
         </Modal>
         <Modal
           animationType="slide"

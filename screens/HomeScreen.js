@@ -185,7 +185,7 @@ function Home({ navigation, route }) {
         onPress={() => { console.log("auuchh") }}
         style={{ width: 300, height: 600 }}
       >
-        <Alert mensaje={values.errorMsg} visible={values.visibleError}></Alert>
+        <Alert message={values.errorMsg} visible={values.visibleError}></Alert>
       </Modal>
       <FlatList
         data={data}

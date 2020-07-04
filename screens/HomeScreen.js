@@ -321,7 +321,7 @@ export default function HomeScreen(props) {
       screenOptions={{
         headerStyle: {
           backgroundColor: '#E0A729',
-          height: Platform.OS === 'ios' ? 105 : 85
+          height: Platform.OS === 'ios' ? 85 : 85
         },
         headerTintColor: '#fff',
         headerTitleStyle: {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, Image, ActivityIndicator, Modal } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, ActivityIndicator, Modal, Platform } from 'react-native';
 
 import { useFormik } from 'formik';
 import { Icon, Text, Form, Item, Label, Picker, Input, Content, Container, Header, Accordion, View } from 'native-base';
@@ -417,9 +417,9 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 20,
     paddingRight: 20,
-    textAlign: "center",
+    textAlign: 'center',
     color: "#FFFFFF",
-    fontSize: 16
+    fontSize: 19
 
   },
   Select: {
@@ -443,7 +443,9 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 20,
     marginTop: 20,
-    marginStart: 1,
+    marginStart: Platform.OS === 'ios' ? 15 : 1,
+    justifyContent:'center',
+    // marginStart: 1,
     resizeMode: 'contain',
   },
   logo1: {

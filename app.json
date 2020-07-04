@@ -8,9 +8,9 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "2.2.3",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-ios.jpg",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -23,11 +23,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.datumposition.gerencia",
+      "buildNumber": "2.2.3",
       "supportsTablet": true
     },
     "android": {
       "package": "com.datumposition.gerencia",
-      "versionCode": 2
+      "versionCode": 3
     }
   }
 }

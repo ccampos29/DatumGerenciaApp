@@ -484,11 +484,12 @@ const styles = StyleSheet.create({
   },
   textButton: {
     padding: 10,
-    paddingLeft: 30,
-    paddingRight: 20,
+    // paddingLeft: 20,
+    // paddingRight: 20,
     color: "#FFFFFF",
-    fontSize: 16,
-    marginLeft: 130
+    fontSize: 20,
+    textAlign:'center'
+    // marginLeft: 130,
   },
   activityIndicator: {
     flex: 1,

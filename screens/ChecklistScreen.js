@@ -74,8 +74,8 @@ export default function ChecklistScreen({ navigation, route }) {
       }
       console.log(info);
       console.log(contentType);
-      // var urlCal = 'http://192.168.100.92/api/checklist/calificarchecklist';
-      var urlCal = 'http://gerencia.datum-position.com/api/checklist/calificarchecklist';
+      // var urlCal = 'https://192.168.100.92/api/checklist/calificarchecklist';
+      var urlCal = 'https://gerencia.datum-position.com/api/checklist/calificarchecklist';
       // console.log(info);  
       await fetch(urlCal, {
         method: 'POST',

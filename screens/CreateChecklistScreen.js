@@ -60,8 +60,8 @@ export default function CreateScreen({ navigation, route }) {
 
       //////console.log(bodyWS);
 
-      var urlCreateCL = 'http://gerencia.datum-position.com/api/checklist/create';
-      var urlGetCalif = 'http://gerencia.datum-position.com/api/checklist/calificacioneschecklist';
+      var urlCreateCL = 'https://gerencia.datum-position.com/api/checklist/create';
+      var urlGetCalif = 'https://gerencia.datum-position.com/api/checklist/calificacioneschecklist';
       var checklistInfo = {};
       await fetch(urlCreateCL, {
         method: 'POST',
@@ -129,7 +129,7 @@ export default function CreateScreen({ navigation, route }) {
         vehicle_id: value,
       });
 
-      var url = 'http://gerencia.datum-position.com/api/checklist/consultamedicion?' + parametros.toString();
+      var url = 'https://gerencia.datum-position.com/api/checklist/consultamedicion?' + parametros.toString();
       //console.log(url);
       await fetch(url, {
         method: 'GET',
@@ -166,7 +166,7 @@ export default function CreateScreen({ navigation, route }) {
         vehicle_id: value, //CARLITOS QUE SEAN IGUALES LOS PARAMETROS NOS AYUDARIA POR ACA
       });
 
-      var url = 'http://gerencia.datum-position.com/api/checklist/tiposchecklist?' + parametrosCL.toString();
+      var url = 'https://gerencia.datum-position.com/api/checklist/tiposchecklist?' + parametrosCL.toString();
       //console.log(url);
       await fetch(url, {
         method: 'GET',
@@ -204,7 +204,7 @@ export default function CreateScreen({ navigation, route }) {
         vehicle_id: value, //CARLITOS QUE SEAN IGUALES LOS PARAMETROS NOS AYUDARIA POR ACA
       });
 
-      var url = 'http://gerencia.datum-position.com/api/checklist/getuserbyvehicle?' + parametrosCL.toString();
+      var url = 'https://gerencia.datum-position.com/api/checklist/getuserbyvehicle?' + parametrosCL.toString();
       //console.log(url);
       await fetch(url, {
         method: 'GET',
@@ -248,7 +248,7 @@ export default function CreateScreen({ navigation, route }) {
     if (checklistTypeId != "-1") {
       setFieldValue('typeCheckList', checklistTypeId);
 
-      var url = 'http://gerencia.datum-position.com/api/checklist/obtenerperiodicidadchecklist';
+      var url = 'https://gerencia.datum-position.com/api/checklist/obtenerperiodicidadchecklist';
 
       await fetch(url, {
         method: 'POST',

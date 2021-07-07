@@ -113,7 +113,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         id_user: route.params.userToken.userId,
       });
       // console.log(info);
-      var urlStore = 'http://gerencia.datum-position.com/api/combustible/storecombustible?' + parameters.toString();
+      var urlStore = 'https://gerencia.datum-position.com/api/combustible/storecombustible?' + parameters.toString();
       fetch(urlStore, {
         method: 'POST',
         headers: {
@@ -171,7 +171,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         vehicle_id: value,
       });
 
-      var url = 'http://gerencia.datum-position.com/api/checklist/consultamedicion?' + parametros.toString();
+      var url = 'https://gerencia.datum-position.com/api/checklist/consultamedicion?' + parametros.toString();
 
       await fetch(url, {
         method: 'GET',
@@ -208,7 +208,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         vehicle_id: value, //CARLITOS QUE SEAN IGUALES LOS PARAMETROS NOS AYUDARIA POR ACA
       });
 
-      var url = 'http://gerencia.datum-position.com/api/checklist/getuserbyvehicle?' + parametrosCL.toString();
+      var url = 'https://gerencia.datum-position.com/api/checklist/getuserbyvehicle?' + parametrosCL.toString();
       //console.log(url);
       await fetch(url, {
         method: 'GET',
@@ -254,7 +254,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         id_pais: value,
       });
 
-      var url = 'http://gerencia.datum-position.com/api/combustible/getdepartamentos?' + parametros.toString();
+      var url = 'https://gerencia.datum-position.com/api/combustible/getdepartamentos?' + parametros.toString();
 
       await fetch(url, {
         method: 'GET',
@@ -294,7 +294,7 @@ export default function CreateFuelScreen({ navigation, route }) {
         id_departamento: value,
       });
 
-      var url = 'http://gerencia.datum-position.com/api/combustible/getmunicipios?' + parametros.toString();
+      var url = 'https://gerencia.datum-position.com/api/combustible/getmunicipios?' + parametros.toString();
 
       await fetch(url, {
         method: 'GET',

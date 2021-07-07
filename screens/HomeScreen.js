@@ -46,7 +46,7 @@ function Home({ navigation, route }) {
         //user_id: 18,
       });
 
-      var url = 'http://gerencia.datum-position.com/api/checklist/getvehiclebyuser?' + parametros.toString();
+      var url = 'https://gerencia.datum-position.com/api/checklist/getvehiclebyuser?' + parametros.toString();
 
       await fetch(url, {
         method: 'GET',
@@ -99,8 +99,8 @@ function Home({ navigation, route }) {
         //user_id: 18,
       });
 
-      var urlFuel = 'http://gerencia.datum-position.com/api/combustible/createcombustible?' + parameters.toString();
-      var urlVehicle = 'http://gerencia.datum-position.com/api/checklist/getvehiclebyuser?' + parametros.toString();
+      var urlFuel = 'https://gerencia.datum-position.com/api/combustible/createcombustible?' + parameters.toString();
+      var urlVehicle = 'https://gerencia.datum-position.com/api/checklist/getvehiclebyuser?' + parametros.toString();
       // console.log(urlFuel);
       var fuelData;
       var vehicleData;
@@ -130,7 +130,7 @@ function Home({ navigation, route }) {
 
           if (resData.status === "success") {
             vehicleData = resData.vehiculos;
-            return fetch('http://gerencia.datum-position.com/pais/pais-list', {
+            return fetch('https://gerencia.datum-position.com/pais/pais-list', {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ function Home({ navigation, route }) {
 //       //user_id: 18,
 //     });
 
-//     var url = 'http://gerencia.datum-position.com/api/checklist/getvehiclebyusr?' + parametros.toString();
+//     var url = 'https://gerencia.datum-position.com/api/checklist/getvehiclebyusr?' + parametros.toString();
 
 //     await fetch(url, {
 //       method: 'GET',
@@ -255,8 +255,8 @@ function Home({ navigation, route }) {
 //       //user_id: 18,
 //     });
 
-//     var urlFuel = 'http://gerencia.datum-position.com/api/combustible/createcombustible?' + parameters.toString();
-//     var urlVehicle = 'http://gerencia.datum-position.com/api/checklist/getvehiclebyuser?' + parametros.toString();
+//     var urlFuel = 'https://gerencia.datum-position.com/api/combustible/createcombustible?' + parameters.toString();
+//     var urlVehicle = 'https://gerencia.datum-position.com/api/checklist/getvehiclebyuser?' + parametros.toString();
 //     console.log(urlFuel);
 //     var fuelData;
 //     var vehicleData;
@@ -286,7 +286,7 @@ function Home({ navigation, route }) {
 
 //         if (resData.status === "success") {
 //           vehicleData = resData.vehiculos;
-//           return fetch('http://gerencia.datum-position.com/pais/pais-list', {
+//           return fetch('https://gerencia.datum-position.com/pais/pais-list', {
 //             method: 'GET',
 //             headers: {
 //               'Content-Type': 'application/json',

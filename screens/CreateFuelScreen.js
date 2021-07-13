@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, Image, Platform, ActivityIndicator, Modal } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, Platform, ActivityIndicator, Modal, ScrollView } from 'react-native';
 import { useFormik } from 'formik';
 import { Textarea, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
@@ -420,7 +420,7 @@ export default function CreateFuelScreen({ navigation, route }) {
 
   return (
     <Container>
-      <Content>
+      <ScrollView>
         <Modal
           animationType="slide"
           transparent={true}
@@ -749,7 +749,7 @@ export default function CreateFuelScreen({ navigation, route }) {
             </TouchableOpacity>
           </Card>
         </Form>
-      </Content>
+      </ScrollView>
     </Container>
   );
 }

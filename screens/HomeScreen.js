@@ -58,7 +58,8 @@ function Home({ navigation, route }) {
         .then(resData => {
           //console.log(resData);
           if (resData.status === "success") {
-            //console.log("////////////////////////////////////////////////");
+            // console.log("////////////////////////////////////////////////");
+            // console.log(resData.vehiculos);
             //spinnerOff();
             setFieldValue('carga', false);
             navigation.navigate("CreateChecklist", { userToken: route.params.userToken, checklistData: resData.vehiculos });

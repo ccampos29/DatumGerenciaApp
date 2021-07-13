@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, ActivityIndicator, Modal } from 'react-native';
+import { StyleSheet, TouchableOpacity, ActivityIndicator, Modal, View, Image, ScrollView } from 'react-native';
 import { useFormik } from 'formik';
-import { Textarea, Form, Card, Item, Label, Picker, Input, Content, Container, Header, Icon, Text } from 'native-base';
+import { Textarea, Form, Card, Item, Label, Picker, Input, Container, Header, Icon, Text } from 'native-base';
 import Alert from "./UI/Alert";
 import * as Yup from 'yup';
 
 export default function CreateScreen({ navigation, route }) {
 
   const vehicles = route.params.checklistData;
-
+  
   const validationSchema = Yup.object({
     plate: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
     typeCheckList: Yup.string().matches(/^(?!^-1).*$/).required('Required'),
@@ -296,10 +296,9 @@ export default function CreateScreen({ navigation, route }) {
     }
 
   }
-
   return (
     <Container>
-      <Content>
+      <ScrollView>
         <Form>
           <Card>
             <Modal
@@ -426,7 +425,7 @@ export default function CreateScreen({ navigation, route }) {
             </TouchableOpacity>
           </Card>
         </Form>
-      </Content>
+        </ScrollView>
     </Container>
   );
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, Image, ActivityIndicator, Modal, Platform } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, ActivityIndicator, Modal, Platform, ScrollView } from 'react-native';
 
 import { useFormik } from 'formik';
 import { Icon, Text, Form, Item, Label, Picker, Input, Content, Container, Header, Accordion, View } from 'native-base';
@@ -203,7 +203,7 @@ export default function ChecklistScreen({ navigation, route }) {
   return (
 
     <Container>
-      <Content padder>
+      <ScrollView>
         <Modal
           animationType="slide"
           transparent={true}
@@ -361,7 +361,7 @@ export default function ChecklistScreen({ navigation, route }) {
             <Text style={styles.textButton}>Enviar</Text>
           </TouchableOpacity>
         </Form>
-      </Content>
+      </ScrollView>
 
     </Container>
 

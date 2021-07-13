@@ -11,7 +11,7 @@ function About(){
     </View>
       <Text>Datum Gerencia APP</Text>
       <Text>Propietario: DATUM POSITION</Text>
-      <Text>Version: V1.1</Text>
+      <Text>Version: V1.2 - 2021</Text>
       <Text style={styles.fieldTextError}>Creado por: CRF - Nova Halley System - novahalleysystem.com</Text>
     </View>
   );  

@@ -3,14 +3,13 @@
     "name": "DatumGerenciaApp",
     "slug": "DatumGerenciaApp",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android"
     ],
-    "version": "2.2.3",
+    "version": "2.2.4",
     "orientation": "portrait",
-    "icon": "./assets/icon-ios.jpg",
+    "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -22,14 +21,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "bundleIdentifier": "com.datumposition.gerencia",
-      "buildNumber": "2.2.3",
-      "supportsTablet": true
-    },
     "android": {
       "package": "com.datumposition.gerencia",
-      "versionCode": 3
+      "versionCode": 4
     }
   }
 }
